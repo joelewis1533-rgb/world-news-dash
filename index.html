@@ -3,75 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Pulse | Unblocked</title>
+    <title>Pulse News | Ghost Mode</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #020617; color: #f8fafc; padding: 20px; margin: 0; }
-        h1 { text-align: center; color: #38bdf8; text-transform: uppercase; letter-spacing: 2px; }
-        .search-container { text-align: center; margin-bottom: 25px; }
-        #searchBar { padding: 12px; width: 85%; max-width: 450px; border-radius: 30px; border: 1px solid #1e293b; background: #0f172a; color: white; outline: none; box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; }
-        .card { background: #1e293b; border: 1px solid #334155; padding: 18px; border-radius: 15px; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
-        .card:hover { border-color: #38bdf8; background: #1e294b; transform: scale(1.02); }
-        .rank { font-size: 10px; color: #38bdf8; font-weight: 900; margin-bottom: 5px; }
-        .country { font-size: 20px; font-weight: 700; display: block; margin-bottom: 12px; border-bottom: 1px solid #334155; padding-bottom: 5px; }
-        .headline { font-size: 14px; color: #94a3b8; line-height: 1.4; min-height: 40px; }
-        .hidden { display: none; }
+        body { font-family: sans-serif; background: #020617; color: #f8fafc; padding: 20px; }
+        h1 { text-align: center; color: #38bdf8; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+        .card { background: #1e293b; border: 1px solid #334155; padding: 15px; border-radius: 12px; cursor: pointer; }
+        .card:hover { border-color: #38bdf8; background: #0f172a; }
+        .headline { font-size: 13px; color: #94a3b8; margin-top: 10px; font-style: italic; }
     </style>
 </head>
 <body>
 
     <h1>World News Pulse</h1>
-    <div class="search-container">
-        <input type="text" id="searchBar" placeholder="Search a nation..." onkeyup="filter()">
-    </div>
-
     <div id="news-grid" class="grid"></div>
 
     <script>
-        const API_KEY = '4c3296f59de57820814e284d3ad079e6'; 
-        const countries = ["USA", "China", "Germany", "India", "Japan", "UK", "France", "Italy", "Russia", "Canada", "Brazil", "Spain", "Mexico", "Australia", "South Korea", "Turkey"];
-
+        const countries = ["USA", "China", "Germany", "India", "UK", "France", "Japan", "Russia", "Canada", "Brazil"];
         const grid = document.getElementById('news-grid');
-        countries.forEach((name, index) => {
+
+        countries.forEach((name, i) => {
             const card = document.createElement('div');
             card.className = 'card';
-            card.setAttribute('data-name', name.toLowerCase());
-            card.innerHTML = `
-                <div class="rank">SAT-LINK #${index + 1}</div>
-                <span class="country">${name}</span>
-                <div class="headline" id="n-${index}">Tap to sync...</div>
-            `;
-            card.onclick = () => getNews(name, index);
+            card.innerHTML = `<strong>${name}</strong><div class="headline" id="h-${i}">Click to Sync...</div>`;
+            card.onclick = () => fetchGhostNews(name, i);
             grid.appendChild(card);
         });
 
-        async function getNews(q, id) {
-            const box = document.getElementById(`n-${id}`);
-            box.innerText = "Bypassing filters...";
-            
-            try {
-                // Using a slightly different URL structure to dodge Chromebook filters
-                const req = await fetch(`https://gnews.io{q}&lang=en&max=1&apikey=${API_KEY}`);
-                
-                if (!req.ok) throw new Error("Server Busy (429)");
-                
-                const res = await req.json();
-                
-                if (res.articles && res.articles.length > 0) {
-                    box.innerHTML = `<strong>${res.articles[0].title}</strong>`;
-                } else {
-                    box.innerText = "Quiet on this frequency.";
-                }
-            } catch (err) {
-                box.innerText = "Network Blocked. Try Incognito Mode.";
-            }
-        }
+        async function fetchGhostNews(q, id) {
+            const box = document.getElementById(`h-${id}`);
+            box.innerText = "Tunneling...";
 
-        function filter() {
-            const val = document.getElementById('searchBar').value.toLowerCase();
-            document.querySelectorAll('.card').forEach(c => {
-                c.classList.toggle('hidden', !c.getAttribute('data-name').includes(val));
-            });
+            try {
+                // Use a different free proxy that looks like a normal website visit
+                const target = `https://api.duckduckgo.com{q}+breaking+news&format=json&no_html=1&skip_disambig=1`;
+                const proxy = `https://thingproxy.freeboard.io{encodeURIComponent(target)}`;
+                
+                const res = await fetch(proxy);
+                const data = await res.json();
+
+                if (data.AbstractText) {
+                    box.innerText = data.AbstractText.substring(0, 100) + "...";
+                } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
+                    box.innerText = data.RelatedTopics[0].Text.substring(0, 100) + "...";
+                } else {
+                    box.innerText = "Satellite Busy. Try again.";
+                }
+            } catch (e) {
+                box.innerText = "Connection Denied by Admin. Use a Mobile Hotspot.";
+            }
         }
     </script>
 </body>
