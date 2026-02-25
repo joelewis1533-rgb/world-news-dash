@@ -3,124 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Pulse | DEFCON COMMAND</title>
-    <style>
-        body { font-family: 'Inter', sans-serif; background: #020617; color: white; padding: 20px; margin: 0; overflow-x: hidden; }
-        
-        /* Panic Button */
-        #panic-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 50%; width: 60px; height: 60px; cursor: pointer; z-index: 2000; font-weight: 900; display: none; border-style: double; }
-        #panic-btn:hover { background: #ef4444; color: white; box-shadow: 0 0 20px #ef4444; transform: scale(1.1); }
+    
+    <!-- 1. ESSENTIAL GOOGLE SEARCH TAGS -->
+    <title>Global Pulse: [Your Headline Here]</title>
+    <meta name="description" content="[Summary of the story for Google's search results - 150 chars max]">
+    <link rel="canonical" href="https://yourusername.github.io" />
+    
+    <!-- 2. GOOGLE NEWS & DISCOVER OPTIMIZATION -->
+    <!-- Forces Google to show large image previews in News feeds -->
+    <meta name="robots" content="max-image-preview:large, max-snippet:-1">
+    
+    <!-- 3. SOCIAL MEDIA & FEED CARDS (Open Graph) -->
+    <meta property="og:title" content="[Your Headline Here]">
+    <meta property="og:description" content="[Short teaser for social media shares]">
+    <meta property="og:image" content="https://yourusername.github.io">
+    <meta property="og:url" content="https://yourusername.github.io">
+    <meta property="og:type" content="article">
 
-        /* DEFCON Header */
-        .defcon-box { background: #1e293b; border: 1px solid #ef4444; padding: 10px 20px; border-radius: 8px; display: inline-block; margin-bottom: 20px; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
-        .defcon-level { color: #ef4444; font-weight: 900; letter-spacing: 2px; }
+    <!-- 4. ADVANCED 2026 NEWSARTICLE SCHEMA (JSON-LD) -->
+    <!-- This is the "hidden" code that tells Google's AI this is a News story -->
+    <script type="application/ld+json">
+    {
+      "@context": "
+Use code with caution.
 
-        /* Login Overlay */
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; z-index: 3000; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: #1e293b; padding: 40px; border-radius: 20px; border: 1px solid #38bdf8; text-align: center; box-shadow: 0 0 30px rgba(56, 189, 248, 0.2); }
-        .login-box h2 { color: #38bdf8; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; }
-        #pin-input { padding: 12px; width: 200px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #38bdf8; text-align: center; font-size: 1.8rem; letter-spacing: 5px; outline: none; margin-bottom: 20px; box-shadow: inset 0 0 10px black; }
-        .access-btn { background: #38bdf8; color: #020617; border: none; padding: 12px 40px; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+html
+https://schema.org
+Use code with caution.
 
-        .header-container { text-align: center; margin-bottom: 20px; }
-        h1 { color: #38bdf8; display: inline-block; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; font-size: 2.2rem; }
-        .status-dot { height: 12px; width: 12px; background-color: #22c55e; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
-        
-        .search-container { text-align: center; margin-bottom: 30px; position: sticky; top: 0; background: #020617; padding: 15px; z-index: 100; border-bottom: 1px solid #1e293b; }
-        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 30px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; max-width: 1600px; margin: 0 auto; }
-        .card { background: #1e293b; border: 1px solid #334155; padding: 25px; border-radius: 20px; cursor: pointer; transition: 0.4s; min-height: 420px; display: flex; flex-direction: column; }
-        .card:hover { border-color: #38bdf8; background: #111827; transform: translateY(-8px); }
-        .country { font-size: 1.5rem; font-weight: 900; border-bottom: 1px solid #334155; padding-bottom: 10px; color: #f1f5f9; }
-        .headline { font-size: 0.9rem; color: #cbd5e1; line-height: 1.7; margin-top: 15px; }
-        .headline b { color: #38bdf8; display: block; margin-top: 12px; }
-
-        /* Footer Disclaimer */
-        footer { margin-top: 60px; padding: 40px; text-align: center; font-size: 0.75rem; color: #475569; border-top: 1px solid #1e293b; background: #010409; line-height: 1.8; }
-        .legal-tag { color: #ef4444; font-weight: 900; letter-spacing: 1px; }
-    </style>
-</head>
-<body onmousemove="resetTimer()">
-
-    <button id="panic-btn" onclick="lockSite()">LOCK</button>
-
-    <div id="login-overlay">
-        <div class="login-box">
-            <h2>SOVEREIGN UPLINK</h2>
-            <p style="color:#94a3b8; font-size: 0.8rem; margin-bottom: 20px;">AUTHORIZED CLEARANCE ONLY</p>
-            <input type="password" id="pin-input" maxlength="4" placeholder="••••">
-            <br>
-            <button class="access-btn" onclick="checkPin()">Initialize Command</button>
-        </div>
-    </div>
-
-    <div class="header-container">
-        <div class="defcon-box">
-            <span class="defcon-level">GLOBAL THREAT LEVEL: DEFCON 2</span>
-        </div><br>
-        <h1>World News Pulse</h1>
-        <span class="status-dot"></span>
-        <span class="status-text" style="color:#22c55e; font-weight:bold;"> ENCRYPTED FEED ACTIVE - FEB 25, 2026</span>
-    </div>
-
-    <div class="search-container"><input type="text" id="searchBar" placeholder="Search 180+ Unique Tactical Stations..." onkeyup="filter()"></div>
-    <div id="news-grid" class="grid"></div>
-
-    <footer>
-        <p><span class="legal-tag">PROPRIETARY ASSET:</span> This encrypted terminal and its associated wire-summaries reflect high-impact news values including Conflict, Prominence, and Consequence. Data curated from global news wires including [Reuters](https://www.reuters.com), [AP](https://apnews.com), and [Google News](https://www.google.com). For educational and private research purposes only.</p>
-        <p>© 2026 GLOBAL PULSE SECURE SYSTEMS. ALL RIGHTS RESERVED.</p>
-    </footer>
-
-    <script>
-        let idleTimer;
-        function resetTimer() { clearTimeout(idleTimer); idleTimer = setTimeout(lockSite, 300000); }
-        function checkPin() { if(document.getElementById('pin-input').value === "1533") { document.getElementById('login-overlay').style.display = "none"; document.getElementById('panic-btn').style.display = "block"; resetTimer(); } }
-        function lockSite() { document.getElementById('login-overlay').style.display = "flex"; document.getElementById('panic-btn').style.display = "none"; }
-
-        const nuclearData = {
-            "USA": "<b>1. COMMAND SHIFT:</b> President Trump finalized an executive order in D.C. this morning diverting NATO funds into domestic hypersonic missile defense. <b>2. UN VETO:</b> The U.S. delegation joined Russia at the UN today to block anniversary resolutions, signaling a hard pivot in Western alliances. <b>3. ENERGY WAR:</b> New federal energy tariffs took effect at market open, triggering mass tech-sector protests in Silicon Valley. <b>4. TACTICAL DEPLOYMENT:</b> Federal watchdogs report a 40% increase in tactical border surges to secure emerging trade corridors. <b>5. ECONOMIC VOLATILITY:</b> Analysts warn that 'Peace Through Tariffs' is causing immediate global interest rate spikes.",
-            "Russia": "<b>1. ARCTIC MONOPOLY:</b> President Putin officially activated the 'Arctic Sovereignty Zone' in Moscow today, authorizing nuclear icebreakers to seize control of all commercial transit. <b>2. GRID DECOUPLING:</b> Gazprom announced a total redirection of gas exports to Eastern hubs, effectively terminating European energy contracts. <b>3. NORTHERN STRIKE:</b> Satellite intel confirms new advanced missile outposts along the Northern Sea Route. <b>4. UN ALLIANCE:</b> The Kremlin hailed the new voting bloc with Washington as a historic victory for strategic realism. <b>5. DATA LOCKDOWN:</b> A new cybersecurity decree was signed this afternoon to nationalize all encrypted communication in major cities.",
-            "China": "<b>1. MARITIME DOMINANCE:</b> President Xi deployed the PLA’s newest carrier task force to the South China Sea to enforce a total security monopoly. <b>2. SILICON SHIELD:</b> Beijing banned all Western-made hardware from government financial hubs effective this morning. <b>3. GLOBAL FRICTION:</b> Shipping insurance rates spiked 200% following naval maneuvers, threatening the semiconductor supply chain. <b>4. SOVEREIGN CLOUD:</b> The world's largest AI cloud officially launched in Shenzhen today to nationalize 1.4 billion citizens' data. <b>5. TRADE WARNING:</b> Formal protests were issued to neighboring capitals warning against international interference in regional trade zones.",
-            "India": "<b>1. AI INDEPENDENCE:</b> PM Modi activated the 'Bharat AI Grid' in New Delhi utilizing custom silicon to bypass Western tech reliance. <b>2. NUCLEAR PACT:</b> A landmark energy agreement was signed with France today to increase clean power production by 30%. <b>3. BORDER TENSION:</b> Additional mountain divisions were deployed to northern strategic zones following suspicious troop movements. <b>4. FISCAL GROWTH:</b> Digital payment infrastructure marked 20% growth today, transforming finance for 1.4 billion citizens. <b>5. ORBITAL DEFENSE:</b> The first indigenous satellite-interception laser was successfully tested at the Odisha range this afternoon.",
-            "North Korea": "<b>1. STRIKE CAPACITY:</b> Kim Jong Un supervised a long-range solid-fuel missile test at the Sohae Station today, demonstrating irreversible nuclear reach. <b>2. DMZ HARDENING:</b> New fortifications were completed this morning to enforce a total communication blackout along the border. <b>3. RESOURCE SHIFT:</b> Military rations were redirected to urban laborers to combat the ongoing resource crisis. <b>4. FINANCIAL BREACH:</b> Intelligence reports a massive cyber strike on South Korean hubs to fund nuclear procurement. <b>5. DEFENSE PACT:</b> A high-level delegation was dispatched to Moscow to finalize the 'Mutual Energy & Defense' agreement.",
-            "Israel": "<b>1. SHADOW FLEET:</b> PM Netanyahu authorized the total destruction of regional oil-laundering networks used for nuclear procurement. <b>2. AID TERMINATION:</b> IDF forces terminated all international aid contracts in Gaza today citing security pretexts. <b>3. INFRASTRUCTURE STRIKE:</b> Units neutralized an asymmetric hacking network targeting the national water grid this morning. <b>4. MARITIME WARNING:</b> A direct threat was issued to Tehran regarding any disruption of Mediterranean shipping lanes. <b>5. MARTIAL PLANNING:</b> A new urban law was enacted today securing a total state monopoly on all utility sites in disputed zones."
-        };
-
-        const fallbackThemes = [
-            "Local authorities in [NATION] finalized a restrictive trade ordinance this morning to protect domestic resource monopolies. Regional leaders cite mounting economic pressure from neighboring blocks as the catalyst for this tactical shift, which effectively halts all non-aligned commercial transit until the spring thaw. Strategic decryption indicates an intensifying internal struggle for infrastructure control.",
-            "A high-stakes infrastructure failure paralyzed [NATION]’s primary metropolitan hub today, prompting an immediate declaration of emergency power allocation. Security forces have begun a martial rollout to secure the national grid as prominent officials investigate potential asymmetric sabotage. This rare event carries major consequences for regional stability and daily community survival.",
-            "A landmark military realignment was authorized in [NATION] today as the state officially decouples its defense procurement from Western supply chains. By utilizing indigenous hardware to monitor borders, the administration aims to secure a monopoly on regional intelligence. This move triggers immediate diplomatic friction with trade partners and signals a long-term shift toward strategic self-reliance.",
-            "Strategic energy rationing began across [NATION] this afternoon as a response to the ongoing global fuel volatility. High-profile leaders announced a state-led takeover of all renewable utility sites to prioritize industrial production over civilian demand. Disagreements over this resource shift have fueled fierce domestic debate and localized protests in the southern corridors."
-        ];
-
-        const countries = ["USA", "Russia", "China", "India", "North Korea", "Israel", "UK", "France", "Pakistan", "Germany", "Gaza", "Ukraine", "Iran", "Chile", "Australia", "Japan", "Canada", "Brazil", "Spain", "Mexico", "South Korea", "Turkey", "Indonesia", "Netherlands", "Saudi Arabia", "Poland", "Switzerland", "Taiwan", "Belgium", "Ireland", "Sweden", "Argentina", "Singapore", "Austria", "UAE", "Thailand", "Norway", "Philippines", "Bangladesh", "Vietnam", "Malaysia", "Denmark", "Colombia", "Hong Kong", "Romania", "South Africa", "Czech Republic", "Pakistan", "Egypt", "Portugal", "Finland", "Nigeria", "Peru", "Kazakhstan", "Greece", "Algeria", "New Zealand", "Iraq", "Hungary", "Qatar", "Cuba", "Morocco", "Slovakia", "Kuwait", "Uzbekistan", "Bulgaria", "Kenya", "Dominican Republic", "Ecuador", "Guatemala", "Puerto Rico", "Ethiopia", "Ghana", "Croatia", "Serbia", "Côte d'Ivoire", "Angola", "Costa Rica", "Oman", "Luxembourg", "Lithuania", "Sri Lanka", "Panama", "Tanzania", "Azerbaijan", "Turkmenistan", "Belarus", "Uruguay", "DR Congo", "Jordan", "Tunisia", "Myanmar", "Cameroon", "Uganda", "Libya", "Bolivia", "Latvia", "Bahrain", "Paraguay", "Estonia", "Nepal", "Macao", "El Salvador", "Honduras", "Senegal", "Papua New Guinea", "Cyprus", "Cambodia", "Zambia", "Iceland", "Zimbabwe", "Trinidad and Tobago", "Bosnia and Herzegovina", "Georgia", "Sudan", "Gabon", "Albania", "Guyana", "Botswana", "Laos", "Burkina Faso", "Mali", "Armenia", "Mauritius", "Benin", "Malta", "Bahamas", "North Macedonia", "South Sudan", "Mongolia", "Guinea", "Madagascar", "Brunei", "Moldova", "Niger", "Chad", "Rwanda", "Malawi", "Mauritania", "Haiti", "Tajikistan", "Kyrgyzstan", "Kosovo", "Nicaragua", "Somalia", "Montenegro", "Togo", "Fiji", "Barbados", "Suriname", "Maldives", "Eswatini", "Sierra Leone", "Liberia", "Burundi", "Andorra", "Djibouti", "Bhutan", "Gambia", "Central African Republic", "Lesotho", "Belize", "Timor-Leste", "Saint Lucia", "Cabo Verde", "Seychelles", "Antigua and Barbuda", "San Marino", "Guinea-Bissau", "Solomon Islands", "Grenada", "Comoros", "Saint Kitts and Nevis", "Vanuatu", "Samoa", "Saint Vincent and the Grenadines", "Dominica", "Sao Tome and Principe", "Tonga", "Micronesia", "Marshall Islands", "Palau", "Kiribati", "Nauru", "Tuvalu", "Holy See"];
-
-        const grid = document.getElementById('news-grid');
-        countries.forEach((name, index) => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.setAttribute('data-name', name.toLowerCase());
-            card.innerHTML = `<div class="rank">STATION #${index + 1}</div><div class="country">${name}</div><div class="headline" id="h-${index}">WAITING FOR DECRYPTION...</div>`;
-            card.onclick = () => {
-                const box = document.getElementById(`h-${index}`);
-                box.innerText = "BYPASSING FILTERS... SYNCING UNIQUE WIRE...";
-                setTimeout(() => {
-                    const theme = fallbackThemes[index % fallbackThemes.length];
-                    const uniqueHeadline = theme.replace("[NATION]", name);
-                    box.innerHTML = nuclearData[name] || uniqueHeadline;
-                }, 450);
-            };
-            grid.appendChild(card);
-        });
-
-        function filter() {
-            const val = document.getElementById('searchBar').value.toLowerCase();
-            document.querySelectorAll('.card').forEach(c => {
-                c.classList.toggle('hidden', !c.getAttribute('data-name').includes(val));
-            });
+html
+",
+      "@type": "NewsArticle",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://yourusername.github.io"
+      },
+      "headline": "[Your Headline Here]",
+      "description": "[Short summary of the story]",
+      "image": [
+        "https://yourusername.github.ioimages/photo-16x9.jpg",
+        "https://yourusername.github.ioimages/photo-4x3.jpg"
+      ],
+      "datePublished": "2026-02-25T08:00:00+00:00",
+      "dateModified": "2026-02-25T10:30:00+00:00",
+      "author": {
+        "@type": "Person",
+        "name": "[Your Name/Writer]",
+        "url": "https://yourusername.github.ioabout"
+      },
+      "publisher": {
+        "@type": "NewsMediaOrganization",
+        "name": "Global Pulse",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://yourusername.github.iologo.png"
         }
+      }
+    }
     </script>
+</head>
+<body>
+    <!-- VISIBLE HEADER -->
+    <header style="text-align: center; border-bottom: 2px solid #000; padding: 20px;">
+        <h1 style="font-size: 3rem; margin: 0;">GLOBAL PULSE</h1>
+        <p><i>World News in Real-Time</i></p>
+    </header>
+
+    <!-- MAIN NEWS ARTICLE CONTENT -->
+    <main style="max-width: 800px; margin: 20px auto; padding: 0 15px;">
+        <article>
+            <!-- Important: This H1 must match the 'headline' in the script above -->
+            <h1 style="font-size: 2.5rem;">[Your Headline Here]</h1>
+            
+            <p style="color: #666;">By <strong>[Writer Name]</strong> | Published: February 25, 2026</p>
+            
+            <img src="https://yourusername.github.ioimages/photo-16x9.jpg" 
+                 alt="[Image Description]" 
+                 style="width: 100%; height: auto; border-radius: 8px;">
+
+            <section style="font-size: 1.2rem; line-height: 1.6; margin-top: 20px;">
+                <p><strong>[CITY, Country]</strong> — [Start your story here. The first paragraph should contain the most important facts to help Google News index you correctly.]</p>
+                
+                <p>[Rest of your news article goes here...]</p>
+            </section>
+        </article>
+    </main>
+
+    <footer style="text-align: center; margin-top: 50px; padding: 20px; background: #f4f4f4;">
+        <p>&copy; 2026 Global Pulse Network | <a href="/about">About Us</a> | <a href="/privacy">Privacy Policy</a></p>
+    </footer>
 </body>
 </html>
