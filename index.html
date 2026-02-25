@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global GDP News Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: white; padding: 20px; }
+        h1 { text-align: center; color: #38bdf8; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 30px; }
+        .card { background: #1e293b; border: 1px solid #334155; padding: 15px; border-radius: 10px; transition: 0.3s; cursor: pointer; }
+        .card:hover { border-color: #38bdf8; transform: translateY(-5px); }
+        .rank { font-size: 0.8rem; color: #94a3b8; font-weight: bold; }
+        .country { font-size: 1.2rem; font-weight: bold; display: block; margin: 5px 0; color: #f8fafc; }
+        .headline { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; border-top: 1px solid #334155; pt: 10px; margin-top: 10px; }
+        .loading { font-style: italic; color: #64748b; }
+    </style>
+</head>
+<body>
+
+    <h1>Global News Pulse: Top 65 by GDP</h1>
+    <p style="text-align: center;">Click any country to fetch the latest headline.</p>
+
+    <div class="grid" id="news-grid"></div>
+
+    <script>
+        // The Top 65 Countries by GDP Rank for 2026
+        const countries = [
+            
+    "USA", "China", "Germany", "India", "Japan", "UK", "France", "Italy", "Russia", "Canada",
+    "Brazil", "Spain", "Mexico", "Australia", "South Korea", "Turkey", "Indonesia", "Netherlands", "Saudi Arabia", "Poland",
+    "Switzerland", "Taiwan", "Belgium", "Ireland", "Sweden", "Argentina", "Israel", "Singapore", "Austria", "UAE",
+    "Thailand", "Norway", "Philippines", "Bangladesh", "Vietnam", "Malaysia", "Denmark", "Colombia", "Hong Kong", "Romania",
+    "South Africa", "Czech Republic", "Pakistan", "Egypt", "Iran", "Portugal", "Chile", "Finland", "Nigeria", "Peru",
+    "Kazakhstan", "Greece", "Algeria", "New Zealand", "Iraq", "Hungary", "Qatar", "Ukraine", "Cuba", "Morocco",
+    "Slovakia", "Kuwait", "Uzbekistan", "Bulgaria", "Kenya", "Dominican Republic", "Ecuador", "Guatemala", "Puerto Rico", "Ethiopia",
+    "Ghana", "Croatia", "Serbia", "Côte d'Ivoire", "Angola", "Costa Rica", "Oman", "Luxembourg", "Lithuania", "Sri Lanka",
+    "Panama", "Tanzania", "Azerbaijan", "Turkmenistan", "Belarus", "Uruguay", "DR Congo", "Jordan", "Tunisia", "Myanmar",
+    "Cameroon", "Uganda", "Libya", "Bolivia", "Latvia", "Bahrain", "Paraguay", "Estonia", "Nepal", "Macao",
+    "El Salvador", "Honduras", "Senegal", "Papua New Guinea", "Cyprus", "Cambodia", "Zambia", "Iceland", "Zimbabwe", "Trinidad and Tobago",
+    "Bosnia and Herzegovina", "Georgia", "Sudan", "Gabon", "Albania", "Guyana", "Botswana", "Laos", "Burkina Faso", "Mali",
+    "Armenia", "Mauritius", "Benin", "Malta", "Bahamas", "North Macedonia", "South Sudan", "Mongolia", "Guinea", "Madagascar",
+    "Brunei", "Moldova", "Niger", "Chad", "Rwanda", "Malawi", "Mauritania", "Haiti", "Tajikistan", "Kyrgyzstan",
+    "Kosovo", "Nicaragua", "Somalia", "Montenegro", "Togo", "Fiji", "Barbados", "Suriname", "Maldives", "Eswatini",
+    "Sierra Leone", "Guyana", "Liberia", "Burundi", "Andorra", "Djibouti", "Bhutan", "Gambia", "Central African Republic", "Lesotho",
+    "Belize", "Timor-Leste", "Saint Lucia", "Cabo Verde", "Seychelles", "Antigua and Barbuda", "San Marino", "Guinea-Bissau", "Solomon Islands", "Grenada",
+    "Comoros", "Saint Kitts and Nevis", "Vanuatu", "Samoa", "Saint Vincent and the Grenadines", "Dominica", "Sao Tome and Principe", "Tonga", "Micronesia", "Marshall Islands",
+    "Palau", "Kiribati", "Nauru", "Tuvalu", "Holy See"
+       ];
+
+        const grid = document.getElementById('news-grid');
+
+        // Create the 195 slots (starting with 65)
+        countries.forEach((name, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="rank">RANK #${index + 1}</div>
+                <span class="country">${name}</span>
+                <div class="headline" id="news-${index}">Click to load news...</div>
+            `;
+            card.onclick = () => fetchNews(name, index);
+            grid.appendChild(card);
+        });
+
+        // Function to pull "live" news (Using a public search proxy for demo)
+        async function fetchNews(country, id) {
+            const display = document.getElementById(`news-${id}`);
+            display.innerText = "Searching...";
+            
+            try {
+                // In a production site, you'd use your NewsAPI Key here.
+                // This is a placeholder that simulates the "9% style" news logic.
+                const response = await fetch(`https://en.wikipedia.org{country}`);
+                const data = await response.json();
+                display.innerText = data.extract.substring(0, 100) + "...";
+            } catch (e) {
+                display.innerText = "Error loading live news. Try again.";
+            }
+        }
+    </script>
+</body>
+</html>
