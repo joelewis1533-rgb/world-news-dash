@@ -3,124 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>joelewis1533-rgb | Newtonian Edition</title>
+    <title>joelewis1533-rgb | Secured</title>
     <style>
         :root { --mouse-x: 50%; --mouse-y: 50%; }
         body { 
-            margin: 0; font-family: 'Georgia', serif; color: white; overflow-x: hidden;
-            background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.15) 0%, rgba(0,0,0,0) 50%), #000;
-            transition: background-color 2s cubic-bezier(0.45, 0.05, 0.55, 0.95); /* Calculus-based smoothing */
+            margin: 0; font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden;
+            background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.1) 0%, rgba(0,0,0,0) 50%), #000;
+            transition: background-color 2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
         }
-        .container { display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+        /* Sovereign Pin Overlay */
+        #pin-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%; background:black;
+            display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:1000;
+        }
+        .pin-input { padding:15px; font-size:24px; text-align:center; border-radius:10px; border:none; width:150px; background:rgba(255,255,255,0.1); color:white; margin-bottom:15px; }
         
-        /* 1. Newton's Gravity Effect (Animation) */
-        h1 { 
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.8); 
-            animation: fall 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; 
-        }
-        @keyframes fall {
-            0% { transform: translateY(-200px); opacity: 0; }
-            60% { transform: translateY(20px); }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-button { 
-            padding: 12px 25px; cursor: pointer; background: rgba(255,255,255,0.1); 
-            border: 1px solid rgba(255,255,255,0.5); color: white; border-radius: 20px; 
-            transition: 0.3s; backdrop-filter: blur(5px);
-        }
-        .tab-button.active { background: white; color: #111; box-shadow: 0 0 15px white; }
+        .container { display: none; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; overflow-y: auto; }
+        h1 { animation: fall 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+        @keyframes fall { 0% { transform: translateY(-150px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
         
-        .content { display: none; width: 100%; max-width: 750px; background: rgba(0,0,0,0.75); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
-        .content.active { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .search-container { display: flex; gap: 10px; margin-top: 15px; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+        .tab-button { padding: 10px 18px; cursor: pointer; background: rgba(255,255,255,0.1); border: 1px solid white; color: white; border-radius: 20px; font-size: 0.9rem; }
+        .tab-button.active { background: white; color: black; box-shadow: 0 0 15px white; }
+        
+        .content { display: none; width: 100%; max-width: 800px; background: rgba(0,0,0,0.8); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .content.active { display: block; }
+        
+        .search-container { display: flex; gap: 10px; margin: 15px 0; }
         .search-input { flex-grow: 1; padding: 12px; border-radius: 5px; border: none; }
-        .search-button { padding: 12px 20px; background: #fff; color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-
-        ul { list-style: none; padding: 0; }
-        li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.95rem; }
+        .gdp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; max-height: 400px; overflow-y: auto; }
+        .gdp-card { background: rgba(255,255,255,0.05); padding: 8px; border-radius: 5px; border-left: 3px solid #00ff88; font-size: 12px; }
         .finance-plus { color: #00ff88; font-weight: bold; }
-        footer { margin-top: auto; padding: 20px; font-style: italic; opacity: 0.7; font-size: 0.8rem; }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- PIN ACCESS -->
+    <div id="pin-overlay">
+        <h2>Enter Sovereign PIN</h2>
+        <input type="password" id="pin" class="pin-input" maxlength="4" placeholder="****">
+        <button onclick="checkPin()" style="padding:10px 20px; cursor:pointer;">Unlock System</button>
+    </div>
+
+    <!-- MAIN INTERFACE -->
+    <div class="container" id="main-ui">
         <h1>joelewis1533-rgb</h1>
-        
         <div class="tabs">
-            <div class="tab-button active" onclick="openTab('main')">Optics & Search</div>
-            <div class="tab-button" onclick="openTab('sports')">Sports</div>
-            <div class="tab-button" onclick="openTab('finance')">Finance</div>
+            <div class="tab-button active" onclick="openTab('main')">Search</div>
+            <div class="tab-button" onclick="openTab('sports')">Sports (15)</div>
+            <div class="tab-button" onclick="openTab('finance')">Finance (+)</div>
+            <div class="tab-button" onclick="openTab('gdp')">Top 100 GDP</div>
         </div>
 
         <div id="main" class="content active">
-            <h2>The Prism Search</h2>
             <form action="https://www.google.com" method="GET" class="search-container" target="_blank">
-                <input type="text" name="q" class="search-input" placeholder="Search the Principia..." required>
-                <button type="submit" class="search-button">Search</button>
+                <input type="text" name="q" class="search-input" placeholder="Secure Google Search..." required>
+                <button type="submit" style="padding:12px; background:#4285F4; color:white; border:none; cursor:pointer;">Search</button>
             </form>
-            <p style="text-align:center; margin-top:20px;">Move your mouse to interact with the Inverse-Square light field.</p>
         </div>
 
         <div id="sports" class="content">
-            <h2>Sports Headlines (Feb 25, 2026)</h2>
-            <ul id="sports-list">
-                <li>1. 21 Million Watch USA-Canada Men's Hockey Gold</li>
-                <li>2. NFL Combine 2026: Prospects Showcase in Indy</li>
-                <li>3. Bears Allow LB Tremaine Edmunds to Seek Trade</li>
-                <li>4. USF Volleyball Coach Shepardson Extension</li>
-                <li>5. Mariners' Cal Raleigh Dismisses 60-Homer Chase</li>
-                <li>6. Danica Patrick Trolls Canada Over Hockey Loss</li>
-                <li>7. Wisconsin Hosts Big Ten Swim Championships</li>
-                <li>8. NFL Considering Replay Official Flag Powers</li>
-                <li>9. Falcons Release QB Cousins, Effective Mar 11</li>
-                <li>10. Sidney Crosby Placed on IR (4-Week Recovery)</li>
-                <li>11. Cubs' Tyler Austin Out Months with Knee Issue</li>
-                <li>12. Rays Ballpark Land Approved by Cabinet</li>
-                <li>13. Chris Sale Signs 1-Year, $27M Braves Extension</li>
-                <li>14. Arvell Reese Projected High to NY Jets</li>
-                <li>15. NC State Lands 2027 QB Gunner Rivers</li>
+            <h2>Sports: Feb 25, 2026</h2>
+            <ul style="list-style:none; padding:0;">
+                <li>1. 21M Watch USA-Canada Hockey Gold Peak</li><li>2. NFL Combine: Top Prospects in Indy</li>
+                <li>3. Bears Allow Edmunds Trade Seek</li><li>4. USF Volleyball Coach Extension</li>
+                <li>5. Mariners' Raleigh on 60-Homer Chase</li><li>6. Danica Patrick Trolls Canada</li>
+                <li>7. Wisconsin Hosts Big Ten Swim Champs</li><li>8. NFL Referees Flag Power Proposal</li>
+                <li>9. Falcons Release QB Cousins</li><li>10. Sidney Crosby on IR (4w)</li>
+                <li>11. Cubs' Tyler Austin Knee Surgery</li><li>12. Rays Ballpark Land Approved</li>
+                <li>13. Chris Sale $27M Braves Extension</li><li>14. Arvell Reese Projected to NYJ</li>
+                <li>15. NC State Lands QB Gunner Rivers</li>
             </ul>
         </div>
 
         <div id="finance" class="content">
             <h2>Market Gravity</h2>
             <ul>
-                <li><span class="finance-plus">(+) Markets Accelerate: S&P 500 Posts Strong Gains</span></li>
-                <li>Nvidia Shares Rise 1.4% Ahead of Key Earnings</li>
+                <li><span class="finance-plus">(+) US Stocks Rally: Nvidia Gains Ahead of Earnings</span></li>
                 <li>Dow Jones Jumps 300+ Points on Labor Data</li>
-                <li>Nvidia 'Vera Rubin' AI System Launching 2026</li>
-                <li>New US 401(k) Match Proposals Boost Sentiment</li>
+                <li>Nvidia 'Vera Rubin' AI Set for 2026 Launch</li>
+                <li>Thrive Capital $1B OpenAI Injection</li>
+                <li>Samsung S26 AI Smartphone Launch</li>
             </ul>
         </div>
 
-        <footer>"Hypotheses non fingo" — Sir Isaac Newton</footer>
+        <div id="gdp" class="content">
+            <h2>Global GDP Ranking (Top 100)</h2>
+            <div class="gdp-grid" id="gdp-list"></div>
+        </div>
     </div>
 
     <script>
-        // 2. Inverse-Square Law (Mouse Tracking Light)
+        const SOVEREIGN_PIN = "1533"; // Set your PIN here
+
+        function checkPin() {
+            if(document.getElementById('pin').value === SOVEREIGN_PIN) {
+                document.getElementById('pin-overlay').style.display = 'none';
+                document.getElementById('main-ui').style.display = 'flex';
+                document.body.style.overflow = 'auto';
+            } else { alert("Access Denied"); }
+        }
+
+        // GDP Data Generator
+        const nations = ["USA", "China", "Germany", "India", "Japan", "UK", "France", "Brazil", "Italy", "Canada", "Russia", "Mexico", "Australia", "Korea", "Spain", "Indonesia", "Turkey", "Netherlands", "Saudi Arabia", "Switzerland"];
+        const gdpList = document.getElementById('gdp-list');
+        for(let i=1; i<=100; i++) {
+            let name = nations[i-1] || "Nation " + i;
+            gdpList.innerHTML += `<div class="gdp-card">#${i} ${name}</div>`;
+        }
+
+        // Newton's Prism & Mouse Interaction
+        let h = 0;
+        function prism() { h = (h + 1) % 360; document.body.style.backgroundColor = `hsl(${h}, 35%, 15%)`; requestAnimationFrame(prism); }
+        prism();
+
         document.addEventListener('mousemove', e => {
             document.body.style.setProperty('--mouse-x', e.clientX + 'px');
             document.body.style.setProperty('--mouse-y', e.clientY + 'px');
         });
 
-        // 3. Prism Color Logic (Sequential Spectrum cycling)
-        let hue = 0;
-        function updatePrism() {
-            hue = (hue + 1) % 360;
-            // Using HSL to mimic the natural prism spectrum
-            document.body.style.backgroundColor = `hsl(${hue}, 40%, 20%)`;
-            requestAnimationFrame(updatePrism);
-        }
-        updatePrism();
-
-        function openTab(tabName) {
-            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
+        function openTab(name) {
+            document.querySelectorAll('.content, .tab-button').forEach(el => el.classList.remove('active'));
+            document.getElementById(name).classList.add('active');
             event.currentTarget.classList.add('active');
         }
     </script>
