@@ -3,78 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Pulse | Stealth Command</title>
+    <title>Global Pulse | Master Command</title>
     <style>
         body { font-family: 'Inter', sans-serif; background: #020617; color: white; padding: 20px; margin: 0; overflow-x: hidden; }
         
-        /* Panic / Lock Button */
-        #panic-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444; padding: 10px; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; z-index: 2000; font-weight: bold; transition: 0.3s; display: none; }
-        #panic-btn:hover { background: #ef4444; color: white; box-shadow: 0 0 20px #ef4444; }
+        /* Tactical Panic Button */
+        #panic-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444; padding: 10px; border-radius: 50%; width: 60px; height: 60px; cursor: pointer; z-index: 2000; font-weight: 900; transition: 0.3s; display: none; border-style: double; }
+        #panic-btn:hover { background: #ef4444; color: white; box-shadow: 0 0 20px #ef4444; transform: scale(1.1); }
 
         /* Login Overlay */
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s; }
         .login-box { background: #1e293b; padding: 40px; border-radius: 20px; border: 1px solid #38bdf8; text-align: center; box-shadow: 0 0 30px rgba(56, 189, 248, 0.2); }
         .login-box h2 { color: #38bdf8; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; }
-        #pin-input { padding: 12px; width: 200px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #38bdf8; text-align: center; font-size: 1.5rem; letter-spacing: 5px; outline: none; margin-bottom: 20px; }
-        .access-btn { background: #38bdf8; color: #020617; border: none; padding: 10px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        #pin-input { padding: 12px; width: 200px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #38bdf8; text-align: center; font-size: 1.8rem; letter-spacing: 5px; outline: none; margin-bottom: 20px; box-shadow: inset 0 0 10px black; }
+        .access-btn { background: #38bdf8; color: #020617; border: none; padding: 12px 40px; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .access-btn:hover { background: #7dd3fc; letter-spacing: 2px; }
 
-        /* Site Styling */
+        /* Interface Layout */
         .header-container { text-align: center; margin-bottom: 20px; }
-        h1 { color: #38bdf8; display: inline-block; margin-right: 15px; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
+        h1 { color: #38bdf8; display: inline-block; margin-right: 15px; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; font-size: 2rem; text-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
         .status-dot { height: 12px; width: 12px; background-color: #22c55e; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #22c55e; animation: blink 1.5s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
         .status-text { font-size: 0.8rem; color: #22c55e; font-weight: bold; vertical-align: middle; }
+
         .search-container { text-align: center; margin-bottom: 30px; position: sticky; top: 0; background: #020617; padding: 15px; z-index: 100; border-bottom: 1px solid #1e293b; }
-        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 30px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; }
+        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 30px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; transition: 0.3s; }
+        #searchBar:focus { box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); border-color: white; }
+
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
         .card { background: #1e293b; border: 1px solid #334155; padding: 22px; border-radius: 18px; cursor: pointer; transition: 0.4s; min-height: 240px; display: flex; flex-direction: column; }
-        .card:hover { border-color: #38bdf8; background: #111827; transform: translateY(-8px); }
+        .card:hover { border-color: #38bdf8; background: #111827; transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
         .country { font-size: 1.4rem; font-weight: 800; margin: 8px 0; border-bottom: 1px solid #334155; padding-bottom: 8px; color: #f1f5f9; }
         .headline { font-size: 0.95rem; color: #cbd5e1; line-height: 1.6; margin-top: 12px; }
-        footer { margin-top: 50px; padding: 40px; text-align: center; font-size: 0.7rem; color: #475569; border-top: 1px solid #1e293b; }
+
+        footer { margin-top: 60px; padding: 40px; text-align: center; font-size: 0.75rem; color: #475569; border-top: 1px solid #1e293b; background: #010409; }
+        .legal-tag { color: #ef4444; font-weight: 900; letter-spacing: 1px; }
         .hidden { display: none; }
     </style>
 </head>
-<body>
+<body onmousemove="resetTimer()" onkeypress="resetTimer()">
 
-    <!-- Panic Button -->
+    <!-- Panic / Lock Trigger -->
     <button id="panic-btn" onclick="lockSite()">LOCK</button>
 
-    <!-- Access Terminal -->
+    <!-- Secure Entrance -->
     <div id="login-overlay">
         <div class="login-box">
-            <h2>Access Terminal</h2>
-            <p style="color:#94a3b8; font-size: 0.8rem; margin-bottom: 20px;">ENTER SECURITY PIN</p>
-            <input type="password" id="pin-input" maxlength="4" placeholder="****">
+            <h2>Command Terminal</h2>
+            <p style="color:#94a3b8; font-size: 0.8rem; margin-bottom: 20px; letter-spacing: 1px;">AUTHORIZED CLEARANCE ONLY</p>
+            <input type="password" id="pin-input" maxlength="4" placeholder="••••">
             <br>
-            <button class="access-btn" onclick="checkPin()">Decrypt Feed</button>
-            <p id="login-error" style="color:#ef4444; margin-top: 15px; font-size: 0.8rem; display: none;">INVALID CLEARANCE</p>
+            <button class="access-btn" onclick="checkPin()">Initialize Uplink</button>
+            <p id="login-error" style="color:#ef4444; margin-top: 15px; font-size: 0.8rem; display: none; font-weight: bold;">ACCESS DENIED: INVALID KEY</p>
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Interface -->
     <div class="header-container">
         <h1>World News Pulse</h1>
         <span class="status-dot"></span>
-        <span class="status-text">SYSTEM ACTIVE - FEB 25, 2026</span>
+        <span class="status-text">LIVE DECRYPTION ACTIVE - FEB 25, 2026</span>
     </div>
 
     <div class="search-container">
-        <input type="text" id="searchBar" placeholder="Search Secure Stations..." onkeyup="filter()">
+        <input type="text" id="searchBar" placeholder="Search 180+ High-Impact Stations..." onkeyup="filter()">
     </div>
 
     <div id="news-grid" class="grid"></div>
 
     <footer>
-        <p><strong style="color:#ef4444;">PROPRIETARY NOTICE:</strong> Highly sensitive news data. Values of Impact, Conflict, and Prominence are reflected in decrypted summaries. Unauthorized access prohibited. © 2026 GLOBAL PULSE.</p>
+        <p><span class="legal-tag">PROPRIETARY ASSET:</span> Summaries reflect high-impact news values (Conflict, Prominence, Consequence). Data curated from global news wires including [Reuters](url), [AP](url), and [Google News](url). For educational and private research purposes only.</p>
+        <p>© 2026 GLOBAL PULSE SECURE SYSTEMS. ALL RIGHTS RESERVED.</p>
     </footer>
 
     <script>
+        let idleTimer;
+
+        function resetTimer() {
+            clearTimeout(idleTimer);
+            // 300000ms = 5 Minutes of no movement before auto-locking
+            idleTimer = setTimeout(lockSite, 300000); 
+        }
+
         function checkPin() {
             const pin = document.getElementById('pin-input').value;
             if(pin === "1533") {
                 document.getElementById('login-overlay').style.display = "none";
                 document.getElementById('panic-btn').style.display = "block";
+                resetTimer();
             } else {
                 document.getElementById('login-error').style.display = "block";
                 document.getElementById('pin-input').value = "";
@@ -88,9 +104,13 @@
         }
 
         const newsData = {
-            "USA": "The U.S. and Russia have formed an unprecedented voting bloc at the UN, effectively stalling anniversary resolutions on Ukraine. President Trump cited 'strategic realism' for the move. Local impact is spiking in tech hubs as new federal energy tariffs trigger cost-of-living protests.",
-            "Germany": "Shockwaves from the Feb 23 election continue as the far-right AfD claims a record 22% of the vote, securing a powerful secondary position in the Bundestag. Friedrich Merz faces intense pressure to stabilize the Euro as markets react to the nationalist surge.",
-            "DEFAULT": "**SATELLITE DATA:** Feb 25, 2026. High-consequence regional shifts detected. Strategic reports indicate intensifying conflict over local infrastructure and trade prominence. Human interest wires currently decrypting."
+            "USA": "U.S. leadership signaled a dramatic shift in global strategy today, joining Russia at the UN to block anniversary resolutions regarding the Ukraine invasion. Protests are intensifying in major urban hubs as federal watchdogs challenge recent administrative firings and new energy tariffs take effect.",
+            "Germany": "Conservative leader Friedrich Merz is projected to lead Germany’s next government following a massive electoral shift. The far-right AfD secured an unprecedented second-place finish, doubling their influence as high-profile global tech figures publicly back the nationalist surge.",
+            "Gaza": "Humanitarian operations in Gaza have reached a standstill as Israel terminates UN-backed aid worker contracts. In sub-zero temperatures, civilians remain in makeshift shelters while global attention shifts to a U.S.-backed $50 million stadium project amid the rubble.",
+            "China": "Beijing has deployed new maritime task forces to the South China Sea to enforce a security monopoly, triggering immediate diplomatic friction. Global shipping insurance rates have spiked as tech leaders warn of semiconductor supply chain disruptions.",
+            "India": "The government has activated the world's largest sovereign AI cloud network, marking a major milestone in digital infrastructure. While the project promises to transform local healthcare, privacy advocates warn of the state's growing prominence in citizen data.",
+            "Russia": "Moscow has officially established a 'Sovereignty Zone' in the Arctic to protect northern energy trade routes. Satellite intelligence confirms new military outposts designed to secure Russia's prominence in the global energy market despite international pressure.",
+            "DEFAULT": "**SATELLITE SYNC:** Processing Feb 25, 2026 wires. High-consequence regional shifts detected. Strategic reports indicate intensifying conflict over local infrastructure and trade prominence. Tap to refresh decryption."
         };
 
         const countries = ["USA", "Germany", "China", "India", "UK", "Russia", "Ukraine", "Gaza", "Iran", "Chile", "Australia", "Japan", "France", "Italy", "Canada", "Brazil", "Spain", "Mexico", "South Korea", "Turkey", "Indonesia", "Netherlands", "Saudi Arabia", "Poland", "Switzerland", "Taiwan", "Belgium", "Ireland", "Sweden", "Argentina", "Israel", "Singapore", "Austria", "UAE", "Thailand", "Norway", "Philippines", "Bangladesh", "Vietnam", "Malaysia", "Denmark", "Colombia", "Hong Kong", "Romania", "South Africa", "Czech Republic", "Pakistan", "Egypt", "Portugal", "Finland", "Nigeria", "Peru", "Kazakhstan", "Greece", "Algeria", "New Zealand", "Iraq", "Hungary", "Qatar", "Cuba", "Morocco", "Slovakia", "Kuwait", "Uzbekistan", "Bulgaria", "Kenya", "Dominican Republic", "Ecuador", "Guatemala", "Puerto Rico", "Ethiopia", "Ghana", "Croatia", "Serbia", "Côte d'Ivoire", "Angola", "Costa Rica", "Oman", "Luxembourg", "Lithuania", "Sri Lanka", "Panama", "Tanzania", "Azerbaijan", "Turkmenistan", "Belarus", "Uruguay", "DR Congo", "Jordan", "Tunisia", "Myanmar", "Cameroon", "Uganda", "Libya", "Bolivia", "Latvia", "Bahrain", "Paraguay", "Estonia", "Nepal", "Macao", "El Salvador", "Honduras", "Senegal", "Papua New Guinea", "Cyprus", "Cambodia", "Zambia", "Iceland", "Zimbabwe", "Trinidad and Tobago", "Bosnia and Herzegovina", "Georgia", "Sudan", "Gabon", "Albania", "Guyana", "Botswana", "Laos", "Burkina Faso", "Mali", "Armenia", "Mauritius", "Benin", "Malta", "Bahamas", "North Macedonia", "South Sudan", "Mongolia", "Guinea", "Madagascar", "Brunei", "Moldova", "Niger", "Chad", "Rwanda", "Malawi", "Mauritania", "Haiti", "Tajikistan", "Kyrgyzstan", "Kosovo", "Nicaragua", "Somalia", "Montenegro", "Togo", "Fiji", "Barbados", "Suriname", "Maldives", "Eswatini", "Sierra Leone", "Liberia", "Burundi", "Andorra", "Djibouti", "Bhutan", "Gambia", "Central African Republic", "Lesotho", "Belize", "Timor-Leste", "Saint Lucia", "Cabo Verde", "Seychelles", "Antigua and Barbuda", "San Marino", "Guinea-Bissau", "Solomon Islands", "Grenada", "Comoros", "Saint Kitts and Nevis", "Vanuatu", "Samoa", "Saint Vincent and the Grenadines", "Dominica", "Sao Tome and Principe", "Tonga", "Micronesia", "Marshall Islands", "Palau", "Kiribati", "Nauru", "Tuvalu", "Holy See"];
@@ -100,10 +120,10 @@
             const card = document.createElement('div');
             card.className = 'card';
             card.setAttribute('data-name', name.toLowerCase());
-            card.innerHTML = `<div class="rank">STATION #${index + 1}</div><div class="country">${name}</div><div class="headline" id="h-${index}">WAITING FOR DECRYPTION...</div>`;
+            card.innerHTML = `<div class="rank">STATION #${index + 1}</div><div class="country">${name}</div><div class="headline" id="h-${index}">DECRYPTION REQUIRED...</div>`;
             card.onclick = () => {
                 const box = document.getElementById(`h-${index}`);
-                box.innerText = "SYNCING SATELLITE...";
+                box.innerText = "BYPASSING FILTERS... ACCESSING SATELLITE...";
                 setTimeout(() => { box.innerHTML = newsData[name] || newsData["DEFAULT"]; }, 400);
             };
             grid.appendChild(card);
