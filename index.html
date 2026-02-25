@@ -3,55 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pulse News | Ghost Mode</title>
+    <title>Global Pulse | Multi-Source</title>
     <style>
-        body { font-family: sans-serif; background: #020617; color: #f8fafc; padding: 20px; }
-        h1 { text-align: center; color: #38bdf8; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
-        .card { background: #1e293b; border: 1px solid #334155; padding: 15px; border-radius: 12px; cursor: pointer; }
-        .card:hover { border-color: #38bdf8; background: #0f172a; }
-        .headline { font-size: 13px; color: #94a3b8; margin-top: 10px; font-style: italic; }
+        body { font-family: 'Inter', sans-serif; background: #020617; color: white; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .card:hover { border-color: #38bdf8; background: #0f172a; transform: translateY(-5px); }
+        .headline { font-size: 0.9rem; color: #94a3b8; margin-top: 10px; border-top: 1px solid #334155; padding-top: 10px; }
     </style>
 </head>
 <body>
 
-    <h1>World News Pulse</h1>
+    <h1 style="text-align:center; color:#38bdf8;">World News Pulse</h1>
     <div id="news-grid" class="grid"></div>
 
     <script>
+        const API_KEY = '4c3296f59de57820814e284d3ad079e6';
         const countries = ["USA", "China", "Germany", "India", "UK", "France", "Japan", "Russia", "Canada", "Brazil"];
         const grid = document.getElementById('news-grid');
 
         countries.forEach((name, i) => {
             const card = document.createElement('div');
             card.className = 'card';
-            card.innerHTML = `<strong>${name}</strong><div class="headline" id="h-${i}">Click to Sync...</div>`;
-            card.onclick = () => fetchGhostNews(name, i);
+            card.innerHTML = `<strong>${name}</strong><div class="headline" id="h-${i}">Click to Sync News...</div>`;
+            card.onclick = () => masterFetch(name, i);
             grid.appendChild(card);
         });
 
-        async function fetchGhostNews(q, id) {
+        async function masterFetch(q, id) {
             const box = document.getElementById(`h-${id}`);
-            box.innerText = "Tunneling...";
+            box.innerText = "Searching Satellites...";
 
+            // ATTEMPT 1: GNEWS (PRO)
             try {
-                // Use a different free proxy that looks like a normal website visit
-                const target = `https://api.duckduckgo.com{q}+breaking+news&format=json&no_html=1&skip_disambig=1`;
-                const proxy = `https://thingproxy.freeboard.io{encodeURIComponent(target)}`;
-                
+                const res = await fetch(`https://gnews.io{q}&lang=en&max=1&apikey=${API_KEY}`);
+                const data = await res.json();
+                if (data.articles && data.articles.length > 0) {
+                    box.innerHTML = `<b>${data.articles[0].title}</b>`;
+                    return;
+                }
+            } catch (e) { console.log("GNews Failed, trying Fallback..."); }
+
+            // ATTEMPT 2: DUCKKDUCKGO (NO KEY)
+            try {
+                const proxy = `https://corsproxy.io{encodeURIComponent('https://api.duckduckgo.com')}`;
                 const res = await fetch(proxy);
                 const data = await res.json();
-
                 if (data.AbstractText) {
                     box.innerText = data.AbstractText.substring(0, 100) + "...";
-                } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
-                    box.innerText = data.RelatedTopics[0].Text.substring(0, 100) + "...";
-                } else {
-                    box.innerText = "Satellite Busy. Try again.";
+                    return;
                 }
-            } catch (e) {
-                box.innerText = "Connection Denied by Admin. Use a Mobile Hotspot.";
-            }
+            } catch (e) { box.innerText = "All Networks Busy. Try again in 60s."; }
         }
     </script>
 </body>
