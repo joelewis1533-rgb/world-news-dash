@@ -3,51 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Pulse | Restricted Access</title>
+    <title>Global Pulse | Stealth Command</title>
     <style>
         body { font-family: 'Inter', sans-serif; background: #020617; color: white; padding: 20px; margin: 0; overflow-x: hidden; }
         
+        /* Panic / Lock Button */
+        #panic-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444; padding: 10px; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; z-index: 2000; font-weight: bold; transition: 0.3s; display: none; }
+        #panic-btn:hover { background: #ef4444; color: white; box-shadow: 0 0 20px #ef4444; }
+
         /* Login Overlay */
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s; }
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; z-index: 3000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s; }
         .login-box { background: #1e293b; padding: 40px; border-radius: 20px; border: 1px solid #38bdf8; text-align: center; box-shadow: 0 0 30px rgba(56, 189, 248, 0.2); }
         .login-box h2 { color: #38bdf8; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; }
         #pin-input { padding: 12px; width: 200px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #38bdf8; text-align: center; font-size: 1.5rem; letter-spacing: 5px; outline: none; margin-bottom: 20px; }
         .access-btn { background: #38bdf8; color: #020617; border: none; padding: 10px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .access-btn:hover { background: #7dd3fc; }
 
-        /* Main Site Layout */
-        .header-container { text-align: center; margin-bottom: 20px; padding-top: 20px; }
+        /* Site Styling */
+        .header-container { text-align: center; margin-bottom: 20px; }
         h1 { color: #38bdf8; display: inline-block; margin-right: 15px; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
         .status-dot { height: 12px; width: 12px; background-color: #22c55e; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #22c55e; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .status-text { font-size: 0.8rem; color: #22c55e; font-weight: bold; vertical-align: middle; }
-
         .search-container { text-align: center; margin-bottom: 30px; position: sticky; top: 0; background: #020617; padding: 15px; z-index: 100; border-bottom: 1px solid #1e293b; }
         #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 30px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; }
-        
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
         .card { background: #1e293b; border: 1px solid #334155; padding: 22px; border-radius: 18px; cursor: pointer; transition: 0.4s; min-height: 240px; display: flex; flex-direction: column; }
-        .card:hover { border-color: #38bdf8; background: #111827; transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .card:hover { border-color: #38bdf8; background: #111827; transform: translateY(-8px); }
         .country { font-size: 1.4rem; font-weight: 800; margin: 8px 0; border-bottom: 1px solid #334155; padding-bottom: 8px; color: #f1f5f9; }
         .headline { font-size: 0.95rem; color: #cbd5e1; line-height: 1.6; margin-top: 12px; }
-
-        /* Terms & Footer */
-        footer { margin-top: 50px; padding: 40px; text-align: center; font-size: 0.7rem; color: #475569; border-top: 1px solid #1e293b; line-height: 1.8; }
-        .legal-tag { color: #ef4444; font-weight: bold; }
+        footer { margin-top: 50px; padding: 40px; text-align: center; font-size: 0.7rem; color: #475569; border-top: 1px solid #1e293b; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
+    <!-- Panic Button -->
+    <button id="panic-btn" onclick="lockSite()">LOCK</button>
+
     <!-- Access Terminal -->
     <div id="login-overlay">
         <div class="login-box">
             <h2>Access Terminal</h2>
-            <p style="color:#94a3b8; font-size: 0.8rem; margin-bottom: 20px;">ENTER SECURITY PIN FOR DECRYPTION</p>
+            <p style="color:#94a3b8; font-size: 0.8rem; margin-bottom: 20px;">ENTER SECURITY PIN</p>
             <input type="password" id="pin-input" maxlength="4" placeholder="****">
             <br>
-            <button class="access-btn" onclick="checkPin()">Initialize Sync</button>
-            <p id="login-error" style="color:#ef4444; margin-top: 15px; font-size: 0.8rem; display: none;">INVALID CLEARANCE CODE</p>
+            <button class="access-btn" onclick="checkPin()">Decrypt Feed</button>
+            <p id="login-error" style="color:#ef4444; margin-top: 15px; font-size: 0.8rem; display: none;">INVALID CLEARANCE</p>
         </div>
     </div>
 
@@ -55,7 +56,7 @@
     <div class="header-container">
         <h1>World News Pulse</h1>
         <span class="status-dot"></span>
-        <span class="status-text">ENCRYPTED FEED ACTIVE - FEB 25, 2026</span>
+        <span class="status-text">SYSTEM ACTIVE - FEB 25, 2026</span>
     </div>
 
     <div class="search-container">
@@ -65,32 +66,34 @@
     <div id="news-grid" class="grid"></div>
 
     <footer>
-        <p><span class="legal-tag">PROPRIETARY NOTICE:</span> This Command Center and its associated data streams are the intellectual property of World News Pulse. Unauthorized duplication, decryption, or distribution of high-impact strategic summaries is strictly prohibited.</p>
-        <p><span class="legal-tag">TERMS OF USE:</span> By accessing this feed, user agrees to maintain information compartmentalization. Data values of Impact, Conflict, and Prominence are calculated via internal proprietary algorithms. © 2026 GLOBAL PULSE SECURE ASSETS.</p>
+        <p><strong style="color:#ef4444;">PROPRIETARY NOTICE:</strong> Highly sensitive news data. Values of Impact, Conflict, and Prominence are reflected in decrypted summaries. Unauthorized access prohibited. © 2026 GLOBAL PULSE.</p>
     </footer>
 
     <script>
-        // Security logic
         function checkPin() {
             const pin = document.getElementById('pin-input').value;
-            // You can change "1533" to any 4-digit code you want
             if(pin === "1533") {
-                document.getElementById('login-overlay').style.opacity = "0";
-                setTimeout(() => { document.getElementById('login-overlay').style.display = "none"; }, 500);
+                document.getElementById('login-overlay').style.display = "none";
+                document.getElementById('panic-btn').style.display = "block";
             } else {
                 document.getElementById('login-error').style.display = "block";
                 document.getElementById('pin-input').value = "";
             }
         }
 
+        function lockSite() {
+            document.getElementById('login-overlay').style.display = "flex";
+            document.getElementById('panic-btn').style.display = "none";
+            document.getElementById('pin-input').value = "";
+        }
+
         const newsData = {
-            "USA": "The U.S. has joined Russia at the UN to block a resolution condemning the Ukraine invasion anniversary, marking a massive pivot in global foreign policy. President Trump maintains this is the 'final path to peace.' Local energy tariffs continue to spark tech-sector protests in major hubs.",
-            "Germany": "Election shockwaves continue as the AfD surges to second place, doubling their seats. Friedrich Merz prepares for a Chancellorship focused on European self-reliance, as high-profile endorsements for nationalist parties trigger intense debate across Berlin.",
-            "Gaza": "Humanitarian operations face total collapse following the termination of MSF activities. In sub-zero temperatures, 100,000 civilians remain in tents, while debate rages over prioritizing reconstruction optcis over immediate survival needs.",
-            "DEFAULT": "**STRATEGIC ALERT:** Intelligence reports for this sector indicate a high-impact shift in regional stability as of Feb 25, 2026. Internal conflict regarding infrastructure and resource allocation is intensifying. Tap for secondary decryption."
+            "USA": "The U.S. and Russia have formed an unprecedented voting bloc at the UN, effectively stalling anniversary resolutions on Ukraine. President Trump cited 'strategic realism' for the move. Local impact is spiking in tech hubs as new federal energy tariffs trigger cost-of-living protests.",
+            "Germany": "Shockwaves from the Feb 23 election continue as the far-right AfD claims a record 22% of the vote, securing a powerful secondary position in the Bundestag. Friedrich Merz faces intense pressure to stabilize the Euro as markets react to the nationalist surge.",
+            "DEFAULT": "**SATELLITE DATA:** Feb 25, 2026. High-consequence regional shifts detected. Strategic reports indicate intensifying conflict over local infrastructure and trade prominence. Human interest wires currently decrypting."
         };
 
-        const countries = ["USA", "Germany", "Gaza", "China", "India", "UK", "Russia", "Ukraine", "Iran", "Chile", "Australia", "Japan", "France", "Italy", "Canada", "Brazil", "Spain", "Mexico", "South Korea", "Turkey", "Indonesia", "Netherlands", "Saudi Arabia", "Poland", "Switzerland", "Taiwan", "Belgium", "Ireland", "Sweden", "Argentina", "Israel", "Singapore", "Austria", "UAE", "Thailand", "Norway", "Philippines", "Bangladesh", "Vietnam", "Malaysia", "Denmark", "Colombia", "Hong Kong", "Romania", "South Africa", "Czech Republic", "Pakistan", "Egypt", "Portugal", "Finland", "Nigeria", "Peru", "Kazakhstan", "Greece", "Algeria", "New Zealand", "Iraq", "Hungary", "Qatar", "Cuba", "Morocco", "Slovakia", "Kuwait", "Uzbekistan", "Bulgaria", "Kenya", "Dominican Republic", "Ecuador", "Guatemala", "Puerto Rico", "Ethiopia", "Ghana", "Croatia", "Serbia", "Côte d'Ivoire", "Angola", "Costa Rica", "Oman", "Luxembourg", "Lithuania", "Sri Lanka", "Panama", "Tanzania", "Azerbaijan", "Turkmenistan", "Belarus", "Uruguay", "DR Congo", "Jordan", "Tunisia", "Myanmar", "Cameroon", "Uganda", "Libya", "Bolivia", "Latvia", "Bahrain", "Paraguay", "Estonia", "Nepal", "Macao", "El Salvador", "Honduras", "Senegal", "Papua New Guinea", "Cyprus", "Cambodia", "Zambia", "Iceland", "Zimbabwe", "Trinidad and Tobago", "Bosnia and Herzegovina", "Georgia", "Sudan", "Gabon", "Albania", "Guyana", "Botswana", "Laos", "Burkina Faso", "Mali", "Armenia", "Mauritius", "Benin", "Malta", "Bahamas", "North Macedonia", "South Sudan", "Mongolia", "Guinea", "Madagascar", "Brunei", "Moldova", "Niger", "Chad", "Rwanda", "Malawi", "Mauritania", "Haiti", "Tajikistan", "Kyrgyzstan", "Kosovo", "Nicaragua", "Somalia", "Montenegro", "Togo", "Fiji", "Barbados", "Suriname", "Maldives", "Eswatini", "Sierra Leone", "Liberia", "Burundi", "Andorra", "Djibouti", "Bhutan", "Gambia", "Central African Republic", "Lesotho", "Belize", "Timor-Leste", "Saint Lucia", "Cabo Verde", "Seychelles", "Antigua and Barbuda", "San Marino", "Guinea-Bissau", "Solomon Islands", "Grenada", "Comoros", "Saint Kitts and Nevis", "Vanuatu", "Samoa", "Saint Vincent and the Grenadines", "Dominica", "Sao Tome and Principe", "Tonga", "Micronesia", "Marshall Islands", "Palau", "Kiribati", "Nauru", "Tuvalu", "Holy See"];
+        const countries = ["USA", "Germany", "China", "India", "UK", "Russia", "Ukraine", "Gaza", "Iran", "Chile", "Australia", "Japan", "France", "Italy", "Canada", "Brazil", "Spain", "Mexico", "South Korea", "Turkey", "Indonesia", "Netherlands", "Saudi Arabia", "Poland", "Switzerland", "Taiwan", "Belgium", "Ireland", "Sweden", "Argentina", "Israel", "Singapore", "Austria", "UAE", "Thailand", "Norway", "Philippines", "Bangladesh", "Vietnam", "Malaysia", "Denmark", "Colombia", "Hong Kong", "Romania", "South Africa", "Czech Republic", "Pakistan", "Egypt", "Portugal", "Finland", "Nigeria", "Peru", "Kazakhstan", "Greece", "Algeria", "New Zealand", "Iraq", "Hungary", "Qatar", "Cuba", "Morocco", "Slovakia", "Kuwait", "Uzbekistan", "Bulgaria", "Kenya", "Dominican Republic", "Ecuador", "Guatemala", "Puerto Rico", "Ethiopia", "Ghana", "Croatia", "Serbia", "Côte d'Ivoire", "Angola", "Costa Rica", "Oman", "Luxembourg", "Lithuania", "Sri Lanka", "Panama", "Tanzania", "Azerbaijan", "Turkmenistan", "Belarus", "Uruguay", "DR Congo", "Jordan", "Tunisia", "Myanmar", "Cameroon", "Uganda", "Libya", "Bolivia", "Latvia", "Bahrain", "Paraguay", "Estonia", "Nepal", "Macao", "El Salvador", "Honduras", "Senegal", "Papua New Guinea", "Cyprus", "Cambodia", "Zambia", "Iceland", "Zimbabwe", "Trinidad and Tobago", "Bosnia and Herzegovina", "Georgia", "Sudan", "Gabon", "Albania", "Guyana", "Botswana", "Laos", "Burkina Faso", "Mali", "Armenia", "Mauritius", "Benin", "Malta", "Bahamas", "North Macedonia", "South Sudan", "Mongolia", "Guinea", "Madagascar", "Brunei", "Moldova", "Niger", "Chad", "Rwanda", "Malawi", "Mauritania", "Haiti", "Tajikistan", "Kyrgyzstan", "Kosovo", "Nicaragua", "Somalia", "Montenegro", "Togo", "Fiji", "Barbados", "Suriname", "Maldives", "Eswatini", "Sierra Leone", "Liberia", "Burundi", "Andorra", "Djibouti", "Bhutan", "Gambia", "Central African Republic", "Lesotho", "Belize", "Timor-Leste", "Saint Lucia", "Cabo Verde", "Seychelles", "Antigua and Barbuda", "San Marino", "Guinea-Bissau", "Solomon Islands", "Grenada", "Comoros", "Saint Kitts and Nevis", "Vanuatu", "Samoa", "Saint Vincent and the Grenadines", "Dominica", "Sao Tome and Principe", "Tonga", "Micronesia", "Marshall Islands", "Palau", "Kiribati", "Nauru", "Tuvalu", "Holy See"];
 
         const grid = document.getElementById('news-grid');
         countries.forEach((name, index) => {
@@ -100,10 +103,8 @@
             card.innerHTML = `<div class="rank">STATION #${index + 1}</div><div class="country">${name}</div><div class="headline" id="h-${index}">WAITING FOR DECRYPTION...</div>`;
             card.onclick = () => {
                 const box = document.getElementById(`h-${index}`);
-                box.innerText = "BYPASSING FILTERS... SYNCING SATELLITE...";
-                setTimeout(() => {
-                    box.innerHTML = newsData[name] || newsData["DEFAULT"];
-                }, 400);
+                box.innerText = "SYNCING SATELLITE...";
+                setTimeout(() => { box.innerHTML = newsData[name] || newsData["DEFAULT"]; }, 400);
             };
             grid.appendChild(card);
         });
