@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global News Pulse | Unblocked</title>
+    <title>Global News Pulse | Ghost Mode</title>
     <style>
         body { font-family: 'Inter', sans-serif; background: #020617; color: white; padding: 20px; margin: 0; }
         h1 { text-align: center; color: #38bdf8; margin: 20px 0; text-transform: uppercase; letter-spacing: 2px; }
         .search-container { text-align: center; margin-bottom: 30px; position: sticky; top: 0; background: #020617; padding: 15px; z-index: 100; border-bottom: 1px solid #1e293b; }
-        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 12px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; font-size: 16px; }
+        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 12px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; font-size: 16px; box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
-        .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 15px; transition: 0.3s; cursor: pointer; min-height: 180px; display: flex; flex-direction: column; }
-        .card:hover { border-color: #38bdf8; background: #1e294b; transform: translateY(-5px); }
+        .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 15px; transition: 0.3s; cursor: pointer; min-height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
+        .card:hover { border-color: #38bdf8; background: #1e294b; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
         .rank { font-size: 0.7rem; color: #38bdf8; font-weight: 800; }
-        .country { font-size: 1.3rem; font-weight: 700; margin: 5px 0; border-bottom: 1px solid #334155; padding-bottom: 5px; }
-        .headline { font-size: 0.9rem; color: #94a3b8; line-height: 1.5; margin-top: auto; font-style: italic; }
+        .country { font-size: 1.3rem; font-weight: 700; margin: 5px 0; border-bottom: 1px solid #334155; padding-bottom: 5px; color: #f8fafc; }
+        .headline { font-size: 0.9rem; color: #94a3b8; line-height: 1.5; font-style: italic; margin-top: 10px; }
         .hidden { display: none; }
     </style>
 </head>
@@ -22,51 +22,58 @@
 
     <h1>World News Pulse</h1>
     <div class="search-container">
-        <input type="text" id="searchBar" placeholder="Bypassing filters..." onkeyup="filter()">
+        <input type="text" id="searchBar" placeholder="Search 180+ stations..." onkeyup="filter()">
     </div>
 
     <div class="grid" id="news-grid"></div>
 
     <script>
-        const API_KEY = '4c3296f59de57820814e284d3ad079e6';
-        const countries = ["USA", "China", "Germany", "India", "Japan", "UK", "France", "Italy", "Russia", "Canada", "Brazil", "Spain", "Mexico", "Australia", "South Korea", "Turkey"];
+        const countries = ["USA", "China", "Germany", "India", "Japan", "UK", "France", "Italy", "Russia", "Canada", "Brazil", "Spain", "Mexico", "Australia", "South Korea", "Turkey", "Indonesia", "Netherlands", "Saudi Arabia", "Poland", "Switzerland", "Taiwan", "Belgium", "Ireland", "Sweden", "Argentina", "Israel", "Singapore", "Austria", "UAE", "Thailand", "Norway", "Philippines", "Bangladesh", "Vietnam", "Malaysia", "Denmark", "Colombia", "Hong Kong", "Romania", "South Africa", "Czech Republic", "Pakistan", "Egypt", "Iran", "Portugal", "Chile", "Finland", "Nigeria", "Peru", "Kazakhstan", "Greece", "Algeria", "New Zealand", "Iraq", "Hungary", "Qatar", "Ukraine", "Cuba", "Morocco", "Slovakia", "Kuwait", "Uzbekistan", "Bulgaria", "Kenya", "Dominican Republic", "Ecuador", "Guatemala", "Puerto Rico", "Ethiopia", "Ghana", "Croatia", "Serbia", "Côte d'Ivoire", "Angola", "Costa Rica", "Oman", "Luxembourg", "Lithuania", "Sri Lanka", "Panama", "Tanzania", "Azerbaijan", "Turkmenistan", "Belarus", "Uruguay", "DR Congo", "Jordan", "Tunisia", "Myanmar", "Cameroon", "Uganda", "Libya", "Bolivia", "Latvia", "Bahrain", "Paraguay", "Estonia", "Nepal", "Macao", "El Salvador", "Honduras", "Senegal", "Papua New Guinea", "Cyprus", "Cambodia", "Zambia", "Iceland", "Zimbabwe", "Trinidad and Tobago", "Bosnia and Herzegovina", "Georgia", "Sudan", "Gabon", "Albania", "Guyana", "Botswana", "Laos", "Burkina Faso", "Mali", "Armenia", "Mauritius", "Benin", "Malta", "Bahamas", "North Macedonia", "South Sudan", "Mongolia", "Guinea", "Madagascar", "Brunei", "Moldova", "Niger", "Chad", "Rwanda", "Malawi", "Mauritania", "Haiti", "Tajikistan", "Kyrgyzstan", "Kosovo", "Nicaragua", "Somalia", "Montenegro", "Togo", "Fiji", "Barbados", "Suriname", "Maldives", "Eswatini", "Sierra Leone", "Liberia", "Burundi", "Andorra", "Djibouti", "Bhutan", "Gambia", "Central African Republic", "Lesotho", "Belize", "Timor-Leste", "Saint Lucia", "Cabo Verde", "Seychelles", "Antigua and Barbuda", "San Marino", "Guinea-Bissau", "Solomon Islands", "Grenada", "Comoros", "Saint Kitts and Nevis", "Vanuatu", "Samoa", "Saint Vincent and the Grenadines", "Dominica", "Sao Tome and Principe", "Tonga", "Micronesia", "Marshall Islands", "Palau", "Kiribati", "Nauru", "Tuvalu", "Holy See"];
 
         const grid = document.getElementById('news-grid');
         countries.forEach((name, index) => {
             const card = document.createElement('div');
             card.className = 'card';
             card.setAttribute('data-name', name.toLowerCase());
-            card.innerHTML = `<div class="rank">SAT-LINK #${index + 1}</div><div class="country">${name}</div><div class="headline" id="h-${index}">Tap to Sync...</div>`;
+            card.setAttribute('data-rank', (index + 1).toString());
+            card.innerHTML = `
+                <div class="rank">STATION #${index + 1}</div>
+                <div class="country">${name}</div>
+                <div class="headline" id="h-${index}">Tap for Live Feed...</div>
+            `;
             card.onclick = () => fetchNews(name, index);
             grid.appendChild(card);
         });
 
         async function fetchNews(q, id) {
             const box = document.getElementById(`h-${id}`);
-            box.innerText = "Tunneling...";
+            box.innerText = "Searching DDG Satellites...";
 
             try {
-                // We wrap the URL in a proxy so the Laptop's WiFi can't see "gnews.io"
-                const targetUrl = `https://gnews.io{encodeURIComponent(q)}&lang=en&max=1&apikey=${API_KEY}`;
-                const proxyUrl = `https://corsproxy.io{encodeURIComponent(targetUrl)}`;
+                // Using DuckDuckGo's internal API - usually bypasses school firewalls
+                const url = `https://api.duckduckgo.com{encodeURIComponent(q + ' current event summary')}&format=json&no_html=1&skip_disambig=1`;
                 
-                const res = await fetch(proxyUrl);
+                const res = await fetch(url);
                 const data = await res.json();
 
-                if (data.articles && data.articles.length > 0) {
-                    box.innerHTML = `<b>${data.articles[0].title}</b>`;
+                if (data.AbstractText) {
+                    box.innerText = data.AbstractText.substring(0, 120) + "...";
+                } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
+                    box.innerText = data.RelatedTopics[0].Text.substring(0, 120) + "...";
                 } else {
-                    box.innerText = "No data on this frequency.";
+                    box.innerText = "No data on this frequency. Try another station.";
                 }
             } catch (e) {
-                box.innerText = "Firewall too strong. Use Mobile Hotspot.";
+                box.innerText = "Network Admin Blocked. Try Incognito Mode or a Hotspot.";
             }
         }
 
         function filter() {
             const val = document.getElementById('searchBar').value.toLowerCase();
             document.querySelectorAll('.card').forEach(c => {
-                c.classList.toggle('hidden', !c.getAttribute('data-name').includes(val));
+                const n = c.getAttribute('data-name');
+                const r = c.getAttribute('data-rank');
+                c.classList.toggle('hidden', !n.includes(val) && !r.includes(val));
             });
         }
     </script>
