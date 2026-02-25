@@ -55,13 +55,15 @@
             display.innerText = "Fetching wires...";
 
             try {
-                // Using DuckDuckGo's Free API through a proxy - No limits, no keys
+                // Corrected API and Proxy logic
                 const targetUrl = `https://api.duckduckgo.com{encodeURIComponent(country + ' news')}&format=json&no_html=1`;
-                const proxyUrl = `https://api.allorigins.win{encodeURIComponent(targetUrl)}`;
+                const proxyUrl = `https://corsproxy.io{encodeURIComponent(targetUrl)}`;
                 
                 const response = await fetch(proxyUrl);
-                const result = await response.json();
-                const data = JSON.parse(result.contents);
+                
+                if (!response.ok) throw new Error('Proxy Busy');
+                
+                const data = await response.json();
                 
                 if (data.AbstractText) {
                     display.innerText = data.AbstractText.substring(0, 120) + "...";
