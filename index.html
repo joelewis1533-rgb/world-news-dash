@@ -15,7 +15,7 @@
         .status-text { font-size: 0.8rem; color: #22c55e; font-weight: bold; vertical-align: middle; }
 
         .search-container { text-align: center; margin-bottom: 30px; position: sticky; top: 0; background: #020617; padding: 15px; z-index: 100; border-bottom: 1px solid #1e293b; }
-        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 12px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); font-size: 16px; }
+        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 12px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; font-size: 16px; }
         
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
         .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 15px; cursor: pointer; transition: 0.3s; min-height: 220px; display: flex; flex-direction: column; }
@@ -24,9 +24,10 @@
         .country { font-size: 1.3rem; font-weight: 700; margin: 5px 0; border-bottom: 1px solid #334155; padding-bottom: 5px; color: #f8fafc; }
         .headline { font-size: 0.9rem; color: #94a3b8; line-height: 1.5; margin-top: 10px; font-style: italic; }
         
-        /* Secure Source Link Style */
-        .source-btn { margin-top: auto; font-size: 0.75rem; color: #38bdf8; text-decoration: none; border: 1px solid #38bdf8; padding: 8px; border-radius: 8px; text-align: center; display: none; transition: 0.2s; font-weight: bold; }
-        .source-btn:hover { background: #38bdf8; color: #020617; }
+        /* Action Buttons */
+        .btn-group { display: flex; gap: 8px; margin-top: auto; }
+        .action-btn { flex: 1; font-size: 0.65rem; color: #38bdf8; text-decoration: none; border: 1px solid #38bdf8; padding: 8px 4px; border-radius: 8px; text-align: center; display: none; transition: 0.2s; font-weight: bold; background: transparent; }
+        .action-btn:hover { background: #38bdf8; color: #020617; }
         
         .hidden { display: none; }
     </style>
@@ -71,24 +72,37 @@
                 <div class="rank">STATION #${index + 1}</div>
                 <div class="country">${name}</div>
                 <div class="headline" id="h-${index}">Tap for Live Feed...</div>
-                <a href="https://www.google.com{encodeURIComponent(name + ' breaking news today')}" 
-                   target="_blank" class="source-btn" id="s-${index}">OPEN SECURE SOURCE</a>
+                <div class="btn-group">
+                    <a href="https://www.google.com{encodeURIComponent(name + ' breaking news today')}" 
+                       target="_blank" class="action-btn" id="s-${index}">SOURCE</a>
+                    <button class="action-btn" id="c-${index}" onclick="copyText('${index}')">COPY</button>
+                </div>
             `;
             
             card.onclick = (e) => {
-                // If button is clicked, do not trigger the card sync
-                if (e.target.classList.contains('source-btn')) return;
+                if (e.target.classList.contains('action-btn')) return;
 
                 const box = document.getElementById(`h-${index}`);
-                const btn = document.getElementById(`s-${index}`);
+                const sBtn = document.getElementById(`s-${index}`);
+                const cBtn = document.getElementById(`c-${index}`);
+                
                 box.innerText = "Syncing Satellite...";
                 setTimeout(() => {
                     box.innerHTML = `<b>${newsData[name] || newsData["DEFAULT"]}</b>`;
-                    btn.style.display = "block"; // Revealed by script
+                    sBtn.style.display = "block";
+                    cBtn.style.display = "block";
                 }, 450);
             };
             grid.appendChild(card);
         });
+
+        function copyText(id) {
+            const text = document.getElementById(`h-${id}`).innerText;
+            navigator.clipboard.writeText(text);
+            const btn = document.getElementById(`c-${id}`);
+            btn.innerText = "SAVED!";
+            setTimeout(() => { btn.innerText = "COPY"; }, 2000);
+        }
 
         function filter() {
             const val = document.getElementById('searchBar').value.toLowerCase();
