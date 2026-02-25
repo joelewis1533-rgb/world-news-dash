@@ -1,28 +1,27 @@
 name: Auto Update News Data
-
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'
-  workflow_dispatch:
 
 permissions:
-  contents: write  # Allows the bot to save news files to your repo
+  contents: write  # THIS FIXES THE CODE 128 ERROR
 
 jobs:
-  build:
+  update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: true  # Fixes the Code 128 error
+          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
+      - name: Install requests
         run: pip install requests
 
       - name: Fetch Latest News
@@ -34,6 +33,6 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add .
+          git add news-data.json sports-data.json
           git commit -m "Automated news update" || echo "No changes to commit"
           git push
