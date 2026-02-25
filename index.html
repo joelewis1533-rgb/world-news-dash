@@ -3,94 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- 1. ESSENTIAL GOOGLE SEARCH TAGS -->
-    <title>Global Pulse: [Your Headline Here]</title>
-    <meta name="description" content="[Summary of the story for Google's search results - 150 chars max]">
-    <link rel="canonical" href="https://yourusername.github.io" />
-    
-    <!-- 2. GOOGLE NEWS & DISCOVER OPTIMIZATION -->
-    <!-- Forces Google to show large image previews in News feeds -->
-    <meta name="robots" content="max-image-preview:large, max-snippet:-1">
-    
-    <!-- 3. SOCIAL MEDIA & FEED CARDS (Open Graph) -->
-    <meta property="og:title" content="[Your Headline Here]">
-    <meta property="og:description" content="[Short teaser for social media shares]">
-    <meta property="og:image" content="https://yourusername.github.io">
-    <meta property="og:url" content="https://yourusername.github.io">
-    <meta property="og:type" content="article">
-
-    <!-- 4. ADVANCED 2026 NEWSARTICLE SCHEMA (JSON-LD) -->
-    <!-- This is the "hidden" code that tells Google's AI this is a News story -->
-    <script type="application/ld+json">
-    {
-      "@context": "
-Use code with caution.
-
-html
-https://schema.org
-Use code with caution.
-
-html
-",
-      "@type": "NewsArticle",
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://yourusername.github.io"
-      },
-      "headline": "[Your Headline Here]",
-      "description": "[Short summary of the story]",
-      "image": [
-        "https://yourusername.github.ioimages/photo-16x9.jpg",
-        "https://yourusername.github.ioimages/photo-4x3.jpg"
-      ],
-      "datePublished": "2026-02-25T08:00:00+00:00",
-      "dateModified": "2026-02-25T10:30:00+00:00",
-      "author": {
-        "@type": "Person",
-        "name": "[Your Name/Writer]",
-        "url": "https://yourusername.github.ioabout"
-      },
-      "publisher": {
-        "@type": "NewsMediaOrganization",
-        "name": "Global Pulse",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://yourusername.github.iologo.png"
+    <title>joelewis1533-rgb | Newtonian Edition</title>
+    <style>
+        :root { --mouse-x: 50%; --mouse-y: 50%; }
+        body { 
+            margin: 0; font-family: 'Georgia', serif; color: white; overflow-x: hidden;
+            background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.15) 0%, rgba(0,0,0,0) 50%), #000;
+            transition: background-color 2s cubic-bezier(0.45, 0.05, 0.55, 0.95); /* Calculus-based smoothing */
         }
-      }
-    }
-    </script>
+        .container { display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        /* 1. Newton's Gravity Effect (Animation) */
+        h1 { 
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8); 
+            animation: fall 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; 
+        }
+        @keyframes fall {
+            0% { transform: translateY(-200px); opacity: 0; }
+            60% { transform: translateY(20px); }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-button { 
+            padding: 12px 25px; cursor: pointer; background: rgba(255,255,255,0.1); 
+            border: 1px solid rgba(255,255,255,0.5); color: white; border-radius: 20px; 
+            transition: 0.3s; backdrop-filter: blur(5px);
+        }
+        .tab-button.active { background: white; color: #111; box-shadow: 0 0 15px white; }
+        
+        .content { display: none; width: 100%; max-width: 750px; background: rgba(0,0,0,0.75); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .content.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .search-container { display: flex; gap: 10px; margin-top: 15px; }
+        .search-input { flex-grow: 1; padding: 12px; border-radius: 5px; border: none; }
+        .search-button { padding: 12px 20px; background: #fff; color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+        ul { list-style: none; padding: 0; }
+        li { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.95rem; }
+        .finance-plus { color: #00ff88; font-weight: bold; }
+        footer { margin-top: auto; padding: 20px; font-style: italic; opacity: 0.7; font-size: 0.8rem; }
+    </style>
 </head>
 <body>
-    <!-- VISIBLE HEADER -->
-    <header style="text-align: center; border-bottom: 2px solid #000; padding: 20px;">
-        <h1 style="font-size: 3rem; margin: 0;">GLOBAL PULSE</h1>
-        <p><i>World News in Real-Time</i></p>
-    </header>
+    <div class="container">
+        <h1>joelewis1533-rgb</h1>
+        
+        <div class="tabs">
+            <div class="tab-button active" onclick="openTab('main')">Optics & Search</div>
+            <div class="tab-button" onclick="openTab('sports')">Sports</div>
+            <div class="tab-button" onclick="openTab('finance')">Finance</div>
+        </div>
 
-    <!-- MAIN NEWS ARTICLE CONTENT -->
-    <main style="max-width: 800px; margin: 20px auto; padding: 0 15px;">
-        <article>
-            <!-- Important: This H1 must match the 'headline' in the script above -->
-            <h1 style="font-size: 2.5rem;">[Your Headline Here]</h1>
-            
-            <p style="color: #666;">By <strong>[Writer Name]</strong> | Published: February 25, 2026</p>
-            
-            <img src="https://yourusername.github.ioimages/photo-16x9.jpg" 
-                 alt="[Image Description]" 
-                 style="width: 100%; height: auto; border-radius: 8px;">
+        <div id="main" class="content active">
+            <h2>The Prism Search</h2>
+            <form action="https://www.google.com" method="GET" class="search-container" target="_blank">
+                <input type="text" name="q" class="search-input" placeholder="Search the Principia..." required>
+                <button type="submit" class="search-button">Search</button>
+            </form>
+            <p style="text-align:center; margin-top:20px;">Move your mouse to interact with the Inverse-Square light field.</p>
+        </div>
 
-            <section style="font-size: 1.2rem; line-height: 1.6; margin-top: 20px;">
-                <p><strong>[CITY, Country]</strong> — [Start your story here. The first paragraph should contain the most important facts to help Google News index you correctly.]</p>
-                
-                <p>[Rest of your news article goes here...]</p>
-            </section>
-        </article>
-    </main>
+        <div id="sports" class="content">
+            <h2>Sports Headlines (Feb 25, 2026)</h2>
+            <ul id="sports-list">
+                <li>1. 21 Million Watch USA-Canada Men's Hockey Gold</li>
+                <li>2. NFL Combine 2026: Prospects Showcase in Indy</li>
+                <li>3. Bears Allow LB Tremaine Edmunds to Seek Trade</li>
+                <li>4. USF Volleyball Coach Shepardson Extension</li>
+                <li>5. Mariners' Cal Raleigh Dismisses 60-Homer Chase</li>
+                <li>6. Danica Patrick Trolls Canada Over Hockey Loss</li>
+                <li>7. Wisconsin Hosts Big Ten Swim Championships</li>
+                <li>8. NFL Considering Replay Official Flag Powers</li>
+                <li>9. Falcons Release QB Cousins, Effective Mar 11</li>
+                <li>10. Sidney Crosby Placed on IR (4-Week Recovery)</li>
+                <li>11. Cubs' Tyler Austin Out Months with Knee Issue</li>
+                <li>12. Rays Ballpark Land Approved by Cabinet</li>
+                <li>13. Chris Sale Signs 1-Year, $27M Braves Extension</li>
+                <li>14. Arvell Reese Projected High to NY Jets</li>
+                <li>15. NC State Lands 2027 QB Gunner Rivers</li>
+            </ul>
+        </div>
 
-    <footer style="text-align: center; margin-top: 50px; padding: 20px; background: #f4f4f4;">
-        <p>&copy; 2026 Global Pulse Network | <a href="/about">About Us</a> | <a href="/privacy">Privacy Policy</a></p>
-    </footer>
+        <div id="finance" class="content">
+            <h2>Market Gravity</h2>
+            <ul>
+                <li><span class="finance-plus">(+) Markets Accelerate: S&P 500 Posts Strong Gains</span></li>
+                <li>Nvidia Shares Rise 1.4% Ahead of Key Earnings</li>
+                <li>Dow Jones Jumps 300+ Points on Labor Data</li>
+                <li>Nvidia 'Vera Rubin' AI System Launching 2026</li>
+                <li>New US 401(k) Match Proposals Boost Sentiment</li>
+            </ul>
+        </div>
+
+        <footer>"Hypotheses non fingo" — Sir Isaac Newton</footer>
+    </div>
+
+    <script>
+        // 2. Inverse-Square Law (Mouse Tracking Light)
+        document.addEventListener('mousemove', e => {
+            document.body.style.setProperty('--mouse-x', e.clientX + 'px');
+            document.body.style.setProperty('--mouse-y', e.clientY + 'px');
+        });
+
+        // 3. Prism Color Logic (Sequential Spectrum cycling)
+        let hue = 0;
+        function updatePrism() {
+            hue = (hue + 1) % 360;
+            // Using HSL to mimic the natural prism spectrum
+            document.body.style.backgroundColor = `hsl(${hue}, 40%, 20%)`;
+            requestAnimationFrame(updatePrism);
+        }
+        updatePrism();
+
+        function openTab(tabName) {
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
 </body>
 </html>
