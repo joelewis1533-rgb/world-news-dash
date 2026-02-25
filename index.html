@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global News Dash | No Limits</title>
+    <title>Global News Pulse | Active</title>
     <style>
         body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; padding: 20px; margin: 0; }
         h1 { text-align: center; color: #38bdf8; margin: 20px 0; }
         .search-container { text-align: center; margin-bottom: 30px; position: sticky; top: 0; background: #0f172a; padding: 10px; z-index: 100; }
         #searchBar { padding: 12px; width: 80%; max-width: 400px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; outline: none; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
-        .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 12px; transition: 0.2s; cursor: pointer; height: 180px; display: flex; flex-direction: column; }
-        .card:hover { border-color: #38bdf8; background: #26334d; }
-        .rank { font-size: 0.7rem; color: #94a3b8; font-weight: bold; text-transform: uppercase; }
-        .country { font-size: 1.2rem; font-weight: bold; margin: 8px 0; color: #f8fafc; }
-        .headline { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; border-top: 1px solid #475569; padding-top: 12px; margin-top: auto; overflow: hidden; font-style: italic; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
+        .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 12px; transition: 0.3s; cursor: pointer; min-height: 180px; display: flex; flex-direction: column; }
+        .card:hover { border-color: #38bdf8; transform: translateY(-3px); background: #1e294b; }
+        .rank { font-size: 0.7rem; color: #38bdf8; font-weight: bold; margin-bottom: 5px; }
+        .country { font-size: 1.3rem; font-weight: bold; color: #f8fafc; margin-bottom: 10px; }
+        .headline { font-size: 0.9rem; color: #cbd5e1; line-height: 1.5; border-top: 1px solid #334155; padding-top: 12px; font-style: italic; }
         .hidden { display: none; }
     </style>
 </head>
@@ -22,59 +22,66 @@
 
     <h1>World News Pulse</h1>
     <div class="search-container">
-        <input type="text" id="searchBar" placeholder="Type a country or rank..." onkeyup="filterCountries()">
+        <input type="text" id="searchBar" placeholder="Search country..." onkeyup="filterCountries()">
     </div>
 
-    <div class="grid" id="news-grid"></div>
+    <div id="news-grid" class="grid"></div>
 
     <script>
-        const countries = ["USA", "China", "Germany", "India", "Japan", "UK", "France", "Italy", "Russia", "Canada", "Brazil", "Spain", "Mexico", "Australia", "South Korea", "Turkey", "Indonesia", "Netherlands", "Saudi Arabia", "Poland", "Switzerland", "Taiwan", "Belgium", "Ireland", "Sweden", "Argentina", "Israel", "Singapore", "Austria", "UAE", "Thailand", "Norway", "Philippines", "Bangladesh", "Vietnam", "Malaysia", "Denmark", "Colombia", "Hong Kong", "Romania", "South Africa", "Czech Republic", "Pakistan", "Egypt", "Iran", "Portugal", "Chile", "Finland", "Nigeria", "Peru", "Kazakhstan", "Greece", "Algeria", "New Zealand", "Iraq", "Hungary", "Qatar", "Ukraine", "Cuba", "Morocco", "Slovakia", "Kuwait", "Uzbekistan", "Bulgaria", "Kenya", "Dominican Republic", "Ecuador", "Guatemala", "Puerto Rico", "Ethiopia", "Ghana", "Croatia", "Serbia", "Côte d'Ivoire", "Angola", "Costa Rica", "Oman", "Luxembourg", "Lithuania", "Sri Lanka", "Panama", "Tanzania", "Azerbaijan", "Turkmenistan", "Belarus", "Uruguay", "DR Congo", "Jordan", "Tunisia", "Myanmar", "Cameroon", "Uganda", "Libya", "Bolivia", "Latvia", "Bahrain", "Paraguay", "Estonia", "Nepal", "Macao", "El Salvador", "Honduras", "Senegal", "Papua New Guinea", "Cyprus", "Cambodia", "Zambia", "Iceland", "Zimbabwe", "Trinidad and Tobago", "Bosnia and Herzegovina", "Georgia", "Sudan", "Gabon", "Albania", "Guyana", "Botswana", "Laos", "Burkina Faso", "Mali", "Armenia", "Mauritius", "Benin", "Malta", "Bahamas", "North Macedonia", "South Sudan", "Mongolia", "Guinea", "Madagascar", "Brunei", "Moldova", "Niger", "Chad", "Rwanda", "Malawi", "Mauritania", "Haiti", "Tajikistan", "Kyrgyzstan", "Kosovo", "Nicaragua", "Somalia", "Montenegro", "Togo", "Fiji", "Barbados", "Suriname", "Maldives", "Eswatini", "Sierra Leone", "Liberia", "Burundi", "Andorra", "Djibouti", "Bhutan", "Gambia", "Central African Republic", "Lesotho", "Belize", "Timor-Leste", "Saint Lucia", "Cabo Verde", "Seychelles", "Antigua and Barbuda", "San Marino", "Guinea-Bissau", "Solomon Islands", "Grenada", "Comoros", "Saint Kitts and Nevis", "Vanuatu", "Samoa", "Saint Vincent and the Grenadines", "Dominica", "Sao Tome and Principe", "Tonga", "Micronesia", "Marshall Islands", "Palau", "Kiribati", "Nauru", "Tuvalu", "Holy See"];
+        // YOUR ACTIVATED GNEWS KEY
+        const API_KEY = '4c3296f59de57820814e284d3ad079e6'; 
+
+        const countries = ["USA", "China", "Germany", "India", "Japan", "UK", "France", "Italy", "Russia", "Canada", "Brazil", "Spain", "Mexico", "Australia", "South Korea", "Turkey", "Indonesia", "Netherlands", "Saudi Arabia", "Poland", "Switzerland", "Taiwan", "Belgium", "Ireland", "Sweden", "Argentina", "Israel", "Singapore", "Austria", "UAE"];
 
         const grid = document.getElementById('news-grid');
         countries.forEach((name, index) => {
             const card = document.createElement('div');
             card.className = 'card';
             card.setAttribute('data-name', name.toLowerCase());
-            card.setAttribute('data-rank', index + 1);
-            card.innerHTML = `<div class="rank">RANK #${index + 1}</div><span class="country">${name}</span><div class="headline" id="news-${index}">Click for news...</div>`;
-            card.onclick = () => fetchUnlimitedNews(name, index);
+            card.innerHTML = `
+                <div class="rank">STATION #${index + 1}</div>
+                <div class="country">${name}</div>
+                <div class="headline" id="news-${index}">Click for live report...</div>
+            `;
+            card.onclick = () => fetchNews(name, index);
             grid.appendChild(card);
         });
+
+        async function fetchNews(country, id) {
+            const display = document.getElementById(`news-${id}`);
+            display.innerText = "Connecting to GNews...";
+
+            try {
+                // Direct GNews Request (No Proxy Needed)
+                const url = `https://gnews.io{encodeURIComponent(country)}&lang=en&max=1&apikey=${API_KEY}`;
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.errors ? errorData.errors[0] : "Limit Reached");
+                }
+
+                const data = await response.json();
+
+                if (data.articles && data.articles.length > 0) {
+                    // Show the headline and a snippet
+                    display.innerText = data.articles[0].title;
+                } else {
+                    display.innerText = "No breaking news found right now.";
+                }
+            } catch (e) {
+                // Shows the REAL error instead of just "System Busy"
+                display.innerText = "Error: " + e.message;
+            }
+        }
 
         function filterCountries() {
             const input = document.getElementById('searchBar').value.toLowerCase();
             document.querySelectorAll('.card').forEach(card => {
                 const name = card.getAttribute('data-name');
-                const rank = card.getAttribute('data-rank');
-                card.classList.toggle('hidden', !name.includes(input) && !rank.includes(input));
+                card.classList.toggle('hidden', !name.includes(input));
             });
-        }
-
-        async function fetchUnlimitedNews(country, id) {
-            const display = document.getElementById(`news-${id}`);
-            display.innerText = "Fetching wires...";
-
-            try {
-                // Corrected API and Proxy logic
-                const targetUrl = `https://api.duckduckgo.com{encodeURIComponent(country + ' news')}&format=json&no_html=1`;
-                const proxyUrl = `https://corsproxy.io{encodeURIComponent(targetUrl)}`;
-                
-                const response = await fetch(proxyUrl);
-                
-                if (!response.ok) throw new Error('Proxy Busy');
-                
-                const data = await response.json();
-                
-                if (data.AbstractText) {
-                    display.innerText = data.AbstractText.substring(0, 120) + "...";
-                } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
-                    display.innerText = data.RelatedTopics[0].Text.substring(0, 120) + "...";
-                } else {
-                    display.innerText = "Global updates in progress. Try another country.";
-                }
-            } catch (e) {
-                display.innerText = "System busy. Click again in a moment.";
-            }
         }
     </script>
 </body>
