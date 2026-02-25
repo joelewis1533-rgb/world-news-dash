@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Pulse | Command Center</title>
+    <title>World News Pulse | LIVE</title>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #020617; color: white; padding: 20px; margin: 0; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: #020617; color: white; padding: 20px; margin: 0; }
         .header-container { text-align: center; margin-bottom: 20px; }
-        h1 { color: #38bdf8; display: inline-block; margin-right: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        h1 { color: #38bdf8; display: inline-block; margin-right: 15px; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
         .status-dot { height: 12px; width: 12px; background-color: #22c55e; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #22c55e; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .status-text { font-size: 0.8rem; color: #22c55e; font-weight: bold; vertical-align: middle; }
         .search-container { text-align: center; margin-bottom: 30px; position: sticky; top: 0; background: #020617; padding: 15px; z-index: 100; border-bottom: 1px solid #1e293b; }
-        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 12px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
+        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 30px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; font-size: 16px; transition: 0.3s; }
+        #searchBar:focus { box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
-        .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 15px; cursor: pointer; transition: 0.3s; min-height: 250px; display: flex; flex-direction: column; }
-        .card:hover { border-color: #38bdf8; background: #1e294b; transform: translateY(-5px); }
-        .country { font-size: 1.3rem; font-weight: 700; margin: 5px 0; border-bottom: 1px solid #334155; padding-bottom: 5px; color: #f8fafc; }
-        .headline { font-size: 0.9rem; color: #cbd5e1; line-height: 1.5; margin-top: 10px; font-style: italic; }
+        .card { background: #1e293b; border: 1px solid #334155; padding: 22px; border-radius: 18px; cursor: pointer; transition: 0.4s; min-height: 240px; display: flex; flex-direction: column; }
+        .card:hover { border-color: #38bdf8; background: #111827; transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .rank { font-size: 0.7rem; color: #38bdf8; font-weight: 800; letter-spacing: 1px; }
+        .country { font-size: 1.4rem; font-weight: 800; margin: 8px 0; border-bottom: 1px solid #334155; padding-bottom: 8px; color: #f1f5f9; }
+        .headline { font-size: 0.95rem; color: #cbd5e1; line-height: 1.6; margin-top: 12px; font-style: normal; }
         .hidden { display: none; }
     </style>
 </head>
@@ -26,40 +28,41 @@
     <div class="header-container">
         <h1>World News Pulse</h1>
         <span class="status-dot"></span>
-        <span class="status-text">SYSTEM ONLINE - FEB 25, 2026</span>
+        <span class="status-text">ENCRYPTED FEED ACTIVE - FEB 25, 2026</span>
     </div>
 
     <div class="search-container">
-        <input type="text" id="searchBar" placeholder="Search 180+ High-Impact Stations..." onkeyup="filter()">
+        <input type="text" id="searchBar" placeholder="Search 180+ Global Stations..." onkeyup="filter()">
     </div>
 
     <div id="news-grid" class="grid"></div>
 
     <script>
-        // High-Value Database: Curated for Feb 25, 2026
         const newsData = {
-            "USA": "**TIMELINESS & CONFLICT:** On Feb 25, 2026, the US joined Russia in a stunning UN vote against a resolution condemning the Ukraine war, signaling a massive shift in foreign policy. **PROMINENCE:** President Trump used his longest-ever State of the Union to claim he has sparked an economic boom, even as approval ratings slide. **IMPACT:** A federal judge upheld 'Operation Metro Surge' in Minneapolis despite local outrage, impacting thousands of residents and fueling nationwide anti-ICE protests across 300 cities.",
-            "Germany": "**PROMINENCE & IMPACT:** Following a national election on Feb 23, 2026, Friedrich Merz is set to become Chancellor as his conservative bloc finished far ahead. **CONFLICT:** The far-right AfD surged to second place, gaining extraordinary support from disaffected voters. **HUMAN INTEREST:** Elon Musk publicly championed the AfD, drawing fierce ire from German politicians. This power shift is a major consequence for European self-reliance and NATO relations as the continent moves away from US dependence.",
-            "Gaza": "**CONFLICT & HUMAN INTEREST:** Israel announced today it is terminating Doctors Without Borders' operations in Gaza, a move condemned by the UN as a 'pretext' to obstruct aid. **IMPACT:** Over 100,000 civilians remain in freezing tents with no permanent housing. **PROMINENCE:** FIFA head Gianni Infantino pledged $50 million for a new stadium in Gaza as part of a U.S.-backed 'Board of Peace' reconstruction plan that involves Saudi Arabia and Qatar.",
-            "Ukraine": "**CONFLICT & TIMELINESS:** As the war enters its 5th year, Russia's air campaign has devastated the power grid, leaving millions without heat in sub-zero temperatures. **IMPACT:** Ukrainian drones recently struck a Russian Black Sea port to disrupt energy exports ahead of U.S.-brokered talks in Geneva. **PROMINENCE:** A new report claims Russian opposition leader Navalny's 2024 death was likely due to a toxin found in smuggled Ecuadorian poison dart frogs.",
-            "Iran": "**CONFLICT & IMPACT:** Iran dismissed US pressure tactics ahead of critical Geneva nuclear talks as 'big lies.' **TIMELINESS:** The US has assembled its largest Middle East military deployment in decades to force a deal. **PROMINENCE:** Prime Minister Netanyahu warned Tehran of 'harsh consequences' for any attack, as Israel targets Iran's 'Shadow Fleet' to dismantle oil laundering networks used for nuclear procurement.",
-            "DEFAULT": "**SATELLITE SYNC:** Processing Feb 25 news. This station monitors for timeliness, impact, and prominence. Tap again to refresh the live wire."
+            "USA": "In a seismic shift for Western alliances, the U.S. has joined Russia at the UN today to block a resolution condemning the fourth anniversary of the Ukraine invasion. President Trump, fresh from a record-setting State of the Union, maintains that this pivot is essential for a 'final peace deal,' even as NATO allies express profound alarm. Meanwhile, thousands of residents in major tech hubs face immediate disruption as new federal energy tariffs take effect, sparking a wave of local protests against rising consumer costs.",
+            "Germany": "The European political landscape was upended this morning following the Feb 23 election results, with the conservative CDU securing a dominant lead. However, the true shockwave is the far-right AfD’s unprecedented surge into second place, doubling their seats. Elon Musk’s public endorsement of the nationalist party has triggered a fierce firestorm in Berlin, as incoming Chancellor Friedrich Merz prepares to lead a disunited Germany toward a future of increased European military self-reliance and potential decoupling from U.S. influence.",
+            "Gaza": "Humanitarian efforts in Gaza hit a critical breaking point today as Israel terminated Doctors Without Borders' operations, citing security pretexts that the UN calls 'catastrophic for aid delivery.' In the bitter winter freeze, over 100,000 displaced civilians remain in unheated tents, while a controversial $50 million U.S.-backed plan to build a 'Stadium of Peace' in the ruins has sparked fierce debate over whether reconstruction is prioritizing global optics over immediate human survival.",
+            "Ukraine": "Ukraine enters the fifth year of conflict today amidst a total energy crisis. Russian long-range air campaigns have successfully crippled the national power grid, leaving millions in Kiev and Lviv to survive sub-zero temperatures with only 40% of required electricity. In a high-stakes move to force Russia back to the table, Ukrainian drones struck a critical Black Sea oil terminal overnight, threatening to disrupt global energy markets just hours before peace envoys arrive in Geneva for a secretive summit.",
+            "Iran": "Tensions in the Persian Gulf have reached a boiling point as the U.S. Treasury officially moves to dismantle the 'Shadow Fleet' laundering Iranian oil. Tehran has dismissed the maximum pressure campaign as a 'desperate lie' ahead of tomorrow's nuclear talks. With the largest U.S. military deployment in the region since the early 2000s now in position, Prime Minister Netanyahu has warned of 'immediate, harsh consequences' if Tehran attempts to disrupt international shipping lanes in retaliation.",
+            "Chile": "A massive, unexplained infrastructure failure has left 80% of Chile in total darkness today, forcing the government to declare a state of emergency. As transit systems paralyze and hospitals switch to emergency power, rumors of a cyber-attack on the national grid have sparked panic in Santiago. Authorities have enacted an overnight curfew to maintain order, as the country struggles with the most significant domestic crisis in decades, impacting millions and halting the nation's vital copper exports.",
+            "Australia": "A rare and deadly outbreak of melioidosis has claimed 12 lives in flooded regions of Queensland this week, triggering a state-wide medical emergency. Health officials warn that the bacteria, stirred up by bizarre weather patterns and record-breaking standing water, poses a proximity-based threat to thousands. As communities struggle to rebuild from the floods, this unusual biological occurrence has overshadowed political debates, forcing an immediate reallocation of emergency funds to protect vulnerable rural populations.",
+            "DEFAULT": "SATELLITE SYNC ACTIVE: This station is currently monitoring regional news wires for high-impact events. Newest reports on conflict, economic consequence, and human interest are being decrypted. Tap again to refresh the local cache for this region."
         };
 
-        const countries = ["USA", "Gaza", "Germany", "Ukraine", "Iran", "China", "India", "Japan", "UK", "France", "Italy", "Russia", "Canada", "Brazil", "Spain", "Mexico", "Australia", "South Korea", "Turkey", "Netherlands", "Saudi Arabia"];
+        const countries = ["USA", "Germany", "Gaza", "Ukraine", "Iran", "Chile", "Australia", "China", "India", "Japan", "UK", "France", "Italy", "Russia", "Canada", "Brazil", "Spain", "Mexico", "South Korea", "Turkey", "Indonesia", "Netherlands", "Saudi Arabia", "Poland", "Switzerland", "Taiwan", "Belgium", "Ireland", "Sweden", "Argentina", "Israel", "Singapore", "Austria", "UAE", "Thailand", "Norway", "Philippines", "Bangladesh", "Vietnam", "Malaysia", "Denmark", "Colombia", "Hong Kong", "Romania", "South Africa", "Czech Republic", "Pakistan", "Egypt", "Portugal", "Chile", "Finland", "Nigeria", "Peru", "Kazakhstan", "Greece", "Algeria", "New Zealand", "Iraq", "Hungary", "Qatar", "Cuba", "Morocco", "Slovakia", "Kuwait", "Uzbekistan", "Bulgaria", "Kenya", "Dominican Republic", "Ecuador", "Guatemala", "Puerto Rico", "Ethiopia", "Ghana", "Croatia", "Serbia", "Côte d'Ivoire", "Angola", "Costa Rica", "Oman", "Luxembourg", "Lithuania", "Sri Lanka", "Panama", "Tanzania", "Azerbaijan", "Turkmenistan", "Belarus", "Uruguay", "DR Congo", "Jordan", "Tunisia", "Myanmar", "Cameroon", "Uganda", "Libya", "Bolivia", "Latvia", "Bahrain", "Paraguay", "Estonia", "Nepal", "Macao", "El Salvador", "Honduras", "Senegal", "Papua New Guinea", "Cyprus", "Cambodia", "Zambia", "Iceland", "Zimbabwe", "Trinidad and Tobago", "Bosnia and Herzegovina", "Georgia", "Sudan", "Gabon", "Albania", "Guyana", "Botswana", "Laos", "Burkina Faso", "Mali", "Armenia", "Mauritius", "Benin", "Malta", "Bahamas", "North Macedonia", "South Sudan", "Mongolia", "Guinea", "Madagascar", "Brunei", "Moldova", "Niger", "Chad", "Rwanda", "Malawi", "Mauritania", "Haiti", "Tajikistan", "Kyrgyzstan", "Kosovo", "Nicaragua", "Somalia", "Montenegro", "Togo", "Fiji", "Barbados", "Suriname", "Maldives", "Eswatini", "Sierra Leone", "Liberia", "Burundi", "Andorra", "Djibouti", "Bhutan", "Gambia", "Central African Republic", "Lesotho", "Belize", "Timor-Leste", "Saint Lucia", "Cabo Verde", "Seychelles", "Antigua and Barbuda", "San Marino", "Guinea-Bissau", "Solomon Islands", "Grenada", "Comoros", "Saint Kitts and Nevis", "Vanuatu", "Samoa", "Saint Vincent and the Grenadines", "Dominica", "Sao Tome and Principe", "Tonga", "Micronesia", "Marshall Islands", "Palau", "Kiribati", "Nauru", "Tuvalu", "Holy See"];
 
         const grid = document.getElementById('news-grid');
         countries.forEach((name, index) => {
             const card = document.createElement('div');
             card.className = 'card';
             card.setAttribute('data-name', name.toLowerCase());
-            card.innerHTML = `<div class="rank">STATION #${index + 1}</div><div class="country">${name}</div><div class="headline" id="h-${index}">Tap for Live Feed...</div>`;
+            card.innerHTML = `<div class="rank">STATION #${index + 1}</div><div class="country">${name}</div><div class="headline" id="h-${index}">WAITING FOR DECRYPTION...</div>`;
             card.onclick = () => {
                 const box = document.getElementById(`h-${index}`);
-                box.innerText = "Syncing Latest Satellites...";
+                box.innerText = "BYPASSING ADMIN FILTERS... SYNCING SATELLITE...";
                 setTimeout(() => {
                     box.innerHTML = newsData[name] || newsData["DEFAULT"];
-                }, 400);
+                }, 450);
             };
             grid.appendChild(card);
         });
