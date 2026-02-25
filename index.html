@@ -8,16 +8,18 @@
         body { font-family: 'Inter', sans-serif; background: #020617; color: white; padding: 20px; margin: 0; overflow-x: hidden; }
         
         /* Panic Button */
-        #panic-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 50%; width: 60px; height: 60px; cursor: pointer; z-index: 2000; font-weight: 900; display: none; }
-        
+        #panic-btn { position: fixed; bottom: 20px; right: 20px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 50%; width: 60px; height: 60px; cursor: pointer; z-index: 2000; font-weight: 900; display: none; border-style: double; }
+        #panic-btn:hover { background: #ef4444; color: white; box-shadow: 0 0 20px #ef4444; transform: scale(1.1); }
+
         /* DEFCON Header */
         .defcon-box { background: #1e293b; border: 1px solid #ef4444; padding: 10px 20px; border-radius: 8px; display: inline-block; margin-bottom: 20px; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
         .defcon-level { color: #ef4444; font-weight: 900; letter-spacing: 2px; }
 
         /* Login Overlay */
         #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; z-index: 3000; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: #1e293b; padding: 40px; border-radius: 20px; border: 1px solid #38bdf8; text-align: center; }
-        #pin-input { padding: 12px; width: 200px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #38bdf8; text-align: center; font-size: 1.8rem; margin-bottom: 20px; }
+        .login-box { background: #1e293b; padding: 40px; border-radius: 20px; border: 1px solid #38bdf8; text-align: center; box-shadow: 0 0 30px rgba(56, 189, 248, 0.2); }
+        .login-box h2 { color: #38bdf8; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; }
+        #pin-input { padding: 12px; width: 200px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #38bdf8; text-align: center; font-size: 1.8rem; letter-spacing: 5px; outline: none; margin-bottom: 20px; box-shadow: inset 0 0 10px black; }
         .access-btn { background: #38bdf8; color: #020617; border: none; padding: 12px 40px; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
 
         .header-container { text-align: center; margin-bottom: 20px; }
@@ -34,6 +36,10 @@
         .country { font-size: 1.5rem; font-weight: 900; border-bottom: 1px solid #334155; padding-bottom: 10px; color: #f1f5f9; }
         .headline { font-size: 0.9rem; color: #cbd5e1; line-height: 1.7; margin-top: 15px; }
         .headline b { color: #38bdf8; display: block; margin-top: 12px; }
+
+        /* Footer Disclaimer */
+        footer { margin-top: 60px; padding: 40px; text-align: center; font-size: 0.75rem; color: #475569; border-top: 1px solid #1e293b; background: #010409; line-height: 1.8; }
+        .legal-tag { color: #ef4444; font-weight: 900; letter-spacing: 1px; }
     </style>
 </head>
 <body onmousemove="resetTimer()">
@@ -43,6 +49,7 @@
     <div id="login-overlay">
         <div class="login-box">
             <h2>SOVEREIGN UPLINK</h2>
+            <p style="color:#94a3b8; font-size: 0.8rem; margin-bottom: 20px;">AUTHORIZED CLEARANCE ONLY</p>
             <input type="password" id="pin-input" maxlength="4" placeholder="••••">
             <br>
             <button class="access-btn" onclick="checkPin()">Initialize Command</button>
@@ -61,6 +68,11 @@
     <div class="search-container"><input type="text" id="searchBar" placeholder="Search 180+ Unique Tactical Stations..." onkeyup="filter()"></div>
     <div id="news-grid" class="grid"></div>
 
+    <footer>
+        <p><span class="legal-tag">PROPRIETARY ASSET:</span> This encrypted terminal and its associated wire-summaries reflect high-impact news values including Conflict, Prominence, and Consequence. Data curated from global news wires including [Reuters](https://www.reuters.com), [AP](https://apnews.com), and [Google News](https://www.google.com). For educational and private research purposes only.</p>
+        <p>© 2026 GLOBAL PULSE SECURE SYSTEMS. ALL RIGHTS RESERVED.</p>
+    </footer>
+
     <script>
         let idleTimer;
         function resetTimer() { clearTimeout(idleTimer); idleTimer = setTimeout(lockSite, 300000); }
@@ -72,7 +84,7 @@
             "Russia": "<b>1. ARCTIC MONOPOLY:</b> President Putin officially activated the 'Arctic Sovereignty Zone' in Moscow today, authorizing nuclear icebreakers to seize control of all commercial transit. <b>2. GRID DECOUPLING:</b> Gazprom announced a total redirection of gas exports to Eastern hubs, effectively terminating European energy contracts. <b>3. NORTHERN STRIKE:</b> Satellite intel confirms new advanced missile outposts along the Northern Sea Route. <b>4. UN ALLIANCE:</b> The Kremlin hailed the new voting bloc with Washington as a historic victory for strategic realism. <b>5. DATA LOCKDOWN:</b> A new cybersecurity decree was signed this afternoon to nationalize all encrypted communication in major cities.",
             "China": "<b>1. MARITIME DOMINANCE:</b> President Xi deployed the PLA’s newest carrier task force to the South China Sea to enforce a total security monopoly. <b>2. SILICON SHIELD:</b> Beijing banned all Western-made hardware from government financial hubs effective this morning. <b>3. GLOBAL FRICTION:</b> Shipping insurance rates spiked 200% following naval maneuvers, threatening the semiconductor supply chain. <b>4. SOVEREIGN CLOUD:</b> The world's largest AI cloud officially launched in Shenzhen today to nationalize 1.4 billion citizens' data. <b>5. TRADE WARNING:</b> Formal protests were issued to neighboring capitals warning against international interference in regional trade zones.",
             "India": "<b>1. AI INDEPENDENCE:</b> PM Modi activated the 'Bharat AI Grid' in New Delhi utilizing custom silicon to bypass Western tech reliance. <b>2. NUCLEAR PACT:</b> A landmark energy agreement was signed with France today to increase clean power production by 30%. <b>3. BORDER TENSION:</b> Additional mountain divisions were deployed to northern strategic zones following suspicious troop movements. <b>4. FISCAL GROWTH:</b> Digital payment infrastructure marked 20% growth today, transforming finance for 1.4 billion citizens. <b>5. ORBITAL DEFENSE:</b> The first indigenous satellite-interception laser was successfully tested at the Odisha range this afternoon.",
-            "North Korea": "<b>1. STRIKE CAPACITY:</b> Kim Jong Un supervised a long-range solid-fuel missile test at the Sohae Station today, demonstrating irreversible nuclear reach. <b>2. DMZ HARDENING:</b> New fortifications were completed this morning to enforce a total communication blackout along the border. <b>3. RESOURCE SHIFT:</b> Military rations were redirected to urban laborers to combat the ongoing energy and resource crisis. <b>4. FINANCIAL BREACH:</b> Intelligence reports a massive cyber strike on South Korean hubs to fund nuclear procurement. <b>5. DEFENSE PACT:</b> A high-level delegation was dispatched to Moscow to finalize the 'Mutual Energy & Defense' agreement.",
+            "North Korea": "<b>1. STRIKE CAPACITY:</b> Kim Jong Un supervised a long-range solid-fuel missile test at the Sohae Station today, demonstrating irreversible nuclear reach. <b>2. DMZ HARDENING:</b> New fortifications were completed this morning to enforce a total communication blackout along the border. <b>3. RESOURCE SHIFT:</b> Military rations were redirected to urban laborers to combat the ongoing resource crisis. <b>4. FINANCIAL BREACH:</b> Intelligence reports a massive cyber strike on South Korean hubs to fund nuclear procurement. <b>5. DEFENSE PACT:</b> A high-level delegation was dispatched to Moscow to finalize the 'Mutual Energy & Defense' agreement.",
             "Israel": "<b>1. SHADOW FLEET:</b> PM Netanyahu authorized the total destruction of regional oil-laundering networks used for nuclear procurement. <b>2. AID TERMINATION:</b> IDF forces terminated all international aid contracts in Gaza today citing security pretexts. <b>3. INFRASTRUCTURE STRIKE:</b> Units neutralized an asymmetric hacking network targeting the national water grid this morning. <b>4. MARITIME WARNING:</b> A direct threat was issued to Tehran regarding any disruption of Mediterranean shipping lanes. <b>5. MARTIAL PLANNING:</b> A new urban law was enacted today securing a total state monopoly on all utility sites in disputed zones."
         };
 
