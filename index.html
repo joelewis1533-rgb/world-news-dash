@@ -3,48 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World News Pulse | LIVE</title>
+    <title>Global Pulse | Restricted Access</title>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #020617; color: white; padding: 20px; margin: 0; }
-        .header-container { text-align: center; margin-bottom: 20px; }
+        body { font-family: 'Inter', sans-serif; background: #020617; color: white; padding: 20px; margin: 0; overflow-x: hidden; }
+        
+        /* Login Overlay */
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020617; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s; }
+        .login-box { background: #1e293b; padding: 40px; border-radius: 20px; border: 1px solid #38bdf8; text-align: center; box-shadow: 0 0 30px rgba(56, 189, 248, 0.2); }
+        .login-box h2 { color: #38bdf8; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; }
+        #pin-input { padding: 12px; width: 200px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #38bdf8; text-align: center; font-size: 1.5rem; letter-spacing: 5px; outline: none; margin-bottom: 20px; }
+        .access-btn { background: #38bdf8; color: #020617; border: none; padding: 10px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .access-btn:hover { background: #7dd3fc; }
+
+        /* Main Site Layout */
+        .header-container { text-align: center; margin-bottom: 20px; padding-top: 20px; }
         h1 { color: #38bdf8; display: inline-block; margin-right: 15px; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
         .status-dot { height: 12px; width: 12px; background-color: #22c55e; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #22c55e; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .status-text { font-size: 0.8rem; color: #22c55e; font-weight: bold; vertical-align: middle; }
+
         .search-container { text-align: center; margin-bottom: 30px; position: sticky; top: 0; background: #020617; padding: 15px; z-index: 100; border-bottom: 1px solid #1e293b; }
-        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 30px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; font-size: 16px; }
+        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 30px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; }
+        
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
         .card { background: #1e293b; border: 1px solid #334155; padding: 22px; border-radius: 18px; cursor: pointer; transition: 0.4s; min-height: 240px; display: flex; flex-direction: column; }
         .card:hover { border-color: #38bdf8; background: #111827; transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
-        .rank { font-size: 0.7rem; color: #38bdf8; font-weight: 800; }
         .country { font-size: 1.4rem; font-weight: 800; margin: 8px 0; border-bottom: 1px solid #334155; padding-bottom: 8px; color: #f1f5f9; }
         .headline { font-size: 0.95rem; color: #cbd5e1; line-height: 1.6; margin-top: 12px; }
+
+        /* Terms & Footer */
+        footer { margin-top: 50px; padding: 40px; text-align: center; font-size: 0.7rem; color: #475569; border-top: 1px solid #1e293b; line-height: 1.8; }
+        .legal-tag { color: #ef4444; font-weight: bold; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
+    <!-- Access Terminal -->
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>Access Terminal</h2>
+            <p style="color:#94a3b8; font-size: 0.8rem; margin-bottom: 20px;">ENTER SECURITY PIN FOR DECRYPTION</p>
+            <input type="password" id="pin-input" maxlength="4" placeholder="****">
+            <br>
+            <button class="access-btn" onclick="checkPin()">Initialize Sync</button>
+            <p id="login-error" style="color:#ef4444; margin-top: 15px; font-size: 0.8rem; display: none;">INVALID CLEARANCE CODE</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
     <div class="header-container">
         <h1>World News Pulse</h1>
         <span class="status-dot"></span>
-        <span class="status-text">ENCRYPTED GLOBAL FEED - FEB 25, 2026</span>
+        <span class="status-text">ENCRYPTED FEED ACTIVE - FEB 25, 2026</span>
     </div>
 
     <div class="search-container">
-        <input type="text" id="searchBar" placeholder="Search 180+ Active Stations..." onkeyup="filter()">
+        <input type="text" id="searchBar" placeholder="Search Secure Stations..." onkeyup="filter()">
     </div>
 
     <div id="news-grid" class="grid"></div>
 
+    <footer>
+        <p><span class="legal-tag">PROPRIETARY NOTICE:</span> This Command Center and its associated data streams are the intellectual property of World News Pulse. Unauthorized duplication, decryption, or distribution of high-impact strategic summaries is strictly prohibited.</p>
+        <p><span class="legal-tag">TERMS OF USE:</span> By accessing this feed, user agrees to maintain information compartmentalization. Data values of Impact, Conflict, and Prominence are calculated via internal proprietary algorithms. © 2026 GLOBAL PULSE SECURE ASSETS.</p>
+    </footer>
+
     <script>
+        // Security logic
+        function checkPin() {
+            const pin = document.getElementById('pin-input').value;
+            // You can change "1533" to any 4-digit code you want
+            if(pin === "1533") {
+                document.getElementById('login-overlay').style.opacity = "0";
+                setTimeout(() => { document.getElementById('login-overlay').style.display = "none"; }, 500);
+            } else {
+                document.getElementById('login-error').style.display = "block";
+                document.getElementById('pin-input').value = "";
+            }
+        }
+
         const newsData = {
-            "USA": "In a seismic shift for Western alliances, the U.S. has joined Russia at the UN today to block a resolution condemning the fourth anniversary of the Ukraine invasion. President Trump maintains that this pivot is essential for a 'final peace deal,' even as NATO allies express profound alarm. Meanwhile, thousands of residents in major tech hubs face immediate disruption as new federal energy tariffs take effect, sparking a wave of local protests.",
-            "Germany": "The European political landscape was upended this morning following election results with the conservative CDU securing a dominant lead. However, the true shockwave is the far-right AfD’s surge into second place, doubling their seats. Elon Musk’s public endorsement has triggered a firestorm in Berlin, as incoming Chancellor Friedrich Merz prepares to lead a Germany focused on military self-reliance and decoupling from U.S. influence.",
-            "Gaza": "Humanitarian efforts hit a critical breaking point today as Israel terminated Doctors Without Borders' operations, citing security pretexts that the UN calls 'catastrophic for aid delivery.' In the bitter winter freeze, over 100,000 displaced civilians remain in unheated tents, while a controversial $50 million U.S.-backed plan to build a 'Stadium of Peace' has sparked fierce debate over prioritizing optics over survival.",
-            "China": "Beijing has officially deployed a new naval task force to the South China Sea this morning, signaling a 'monopoly on security' in disputed waters. This high-stakes move has triggered immediate diplomatic friction with neighboring capitals and a surge in global shipping insurance rates. Prominent tech leaders warn that this regional conflict could disrupt the worldwide semiconductor supply chain within the next 48 hours.",
-            "India": "A massive breakthrough in digital infrastructure has been reported in New Delhi, as the government officially activates the world's largest sovereign AI cloud network. This milestone carries enormous impact for the nation's 1.4 billion citizens, promising a total transformation of local healthcare and finance systems. However, controversy persists over new data privacy laws that critics claim give the state too much prominence in daily life.",
-            "UK": "London’s financial district has entered an emergency session today as the 'Great Sterling Shift' takes hold. Following new trade agreements with emerging markets, the Pound has seen its most volatile 24-hour period in a decade. This economic conflict between old and new trade blocks has direct consequences for millions of UK homeowners facing sudden interest rate adjustments.",
-            "Russia": "Moscow has officially declared a new 'Energy Sovereignty Zone' in the Arctic, deploying advanced icebreakers to secure vital northern trade routes. This move cements Russia's prominence in the global energy market despite ongoing sanctions. High-profile satellite imagery confirms new military outposts, highlighting the intensifying struggle for control over the world's last untapped resource frontier."
+            "USA": "The U.S. has joined Russia at the UN to block a resolution condemning the Ukraine invasion anniversary, marking a massive pivot in global foreign policy. President Trump maintains this is the 'final path to peace.' Local energy tariffs continue to spark tech-sector protests in major hubs.",
+            "Germany": "Election shockwaves continue as the AfD surges to second place, doubling their seats. Friedrich Merz prepares for a Chancellorship focused on European self-reliance, as high-profile endorsements for nationalist parties trigger intense debate across Berlin.",
+            "Gaza": "Humanitarian operations face total collapse following the termination of MSF activities. In sub-zero temperatures, 100,000 civilians remain in tents, while debate rages over prioritizing reconstruction optcis over immediate survival needs.",
+            "DEFAULT": "**STRATEGIC ALERT:** Intelligence reports for this sector indicate a high-impact shift in regional stability as of Feb 25, 2026. Internal conflict regarding infrastructure and resource allocation is intensifying. Tap for secondary decryption."
         };
 
         const countries = ["USA", "Germany", "Gaza", "China", "India", "UK", "Russia", "Ukraine", "Iran", "Chile", "Australia", "Japan", "France", "Italy", "Canada", "Brazil", "Spain", "Mexico", "South Korea", "Turkey", "Indonesia", "Netherlands", "Saudi Arabia", "Poland", "Switzerland", "Taiwan", "Belgium", "Ireland", "Sweden", "Argentina", "Israel", "Singapore", "Austria", "UAE", "Thailand", "Norway", "Philippines", "Bangladesh", "Vietnam", "Malaysia", "Denmark", "Colombia", "Hong Kong", "Romania", "South Africa", "Czech Republic", "Pakistan", "Egypt", "Portugal", "Finland", "Nigeria", "Peru", "Kazakhstan", "Greece", "Algeria", "New Zealand", "Iraq", "Hungary", "Qatar", "Cuba", "Morocco", "Slovakia", "Kuwait", "Uzbekistan", "Bulgaria", "Kenya", "Dominican Republic", "Ecuador", "Guatemala", "Puerto Rico", "Ethiopia", "Ghana", "Croatia", "Serbia", "Côte d'Ivoire", "Angola", "Costa Rica", "Oman", "Luxembourg", "Lithuania", "Sri Lanka", "Panama", "Tanzania", "Azerbaijan", "Turkmenistan", "Belarus", "Uruguay", "DR Congo", "Jordan", "Tunisia", "Myanmar", "Cameroon", "Uganda", "Libya", "Bolivia", "Latvia", "Bahrain", "Paraguay", "Estonia", "Nepal", "Macao", "El Salvador", "Honduras", "Senegal", "Papua New Guinea", "Cyprus", "Cambodia", "Zambia", "Iceland", "Zimbabwe", "Trinidad and Tobago", "Bosnia and Herzegovina", "Georgia", "Sudan", "Gabon", "Albania", "Guyana", "Botswana", "Laos", "Burkina Faso", "Mali", "Armenia", "Mauritius", "Benin", "Malta", "Bahamas", "North Macedonia", "South Sudan", "Mongolia", "Guinea", "Madagascar", "Brunei", "Moldova", "Niger", "Chad", "Rwanda", "Malawi", "Mauritania", "Haiti", "Tajikistan", "Kyrgyzstan", "Kosovo", "Nicaragua", "Somalia", "Montenegro", "Togo", "Fiji", "Barbados", "Suriname", "Maldives", "Eswatini", "Sierra Leone", "Liberia", "Burundi", "Andorra", "Djibouti", "Bhutan", "Gambia", "Central African Republic", "Lesotho", "Belize", "Timor-Leste", "Saint Lucia", "Cabo Verde", "Seychelles", "Antigua and Barbuda", "San Marino", "Guinea-Bissau", "Solomon Islands", "Grenada", "Comoros", "Saint Kitts and Nevis", "Vanuatu", "Samoa", "Saint Vincent and the Grenadines", "Dominica", "Sao Tome and Principe", "Tonga", "Micronesia", "Marshall Islands", "Palau", "Kiribati", "Nauru", "Tuvalu", "Holy See"];
@@ -58,12 +101,9 @@
             card.onclick = () => {
                 const box = document.getElementById(`h-${index}`);
                 box.innerText = "BYPASSING FILTERS... SYNCING SATELLITE...";
-                
-                // GENERATIVE FALLBACK: If we don't have a specific headline, it creates a custom strategic report
                 setTimeout(() => {
-                    const fallback = `**STRATEGIC ALERT:** Intelligence reports for ${name} indicate a significant shift in regional stability as of Feb 25, 2026. Local authorities are managing a developing internal conflict regarding resource allocation and infrastructure security. This event carries major impact for the community and surrounding trade blocks. Tap to re-sync for live human-interest updates.`;
-                    box.innerHTML = newsData[name] || fallback;
-                }, 450);
+                    box.innerHTML = newsData[name] || newsData["DEFAULT"];
+                }, 400);
             };
             grid.appendChild(card);
         });
