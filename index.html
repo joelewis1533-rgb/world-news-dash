@@ -3,128 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>joelewis1533-rgb | Secured</title>
+    <title>Sovereign Uplink | joelewis1533</title>
     <style>
-        :root { --mouse-x: 50%; --mouse-y: 50%; }
-        body { 
-            margin: 0; font-family: 'Segoe UI', sans-serif; color: white; overflow: hidden;
-            background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.1) 0%, rgba(0,0,0,0) 50%), #000;
-            transition: background-color 2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
-        }
-        /* Sovereign Pin Overlay */
-        #pin-overlay {
-            position: fixed; top:0; left:0; width:100%; height:100%; background:black;
-            display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:1000;
-        }
-        .pin-input { padding:15px; font-size:24px; text-align:center; border-radius:10px; border:none; width:150px; background:rgba(255,255,255,0.1); color:white; margin-bottom:15px; }
+        body { font-family: 'Inter', sans-serif; background: #020617; color: white; margin: 0; overflow-x: hidden; }
+        #login-overlay { position: fixed; inset: 0; background: #020617; z-index: 3000; display: flex; align-items: center; justify-content: center; }
+        .login-box { background: #1e293b; padding: 40px; border-radius: 20px; border: 1px solid #38bdf8; text-align: center; }
+        #pin-input { padding: 12px; width: 160px; border-radius: 8px; background: #0f172a; color: #38bdf8; font-size: 1.8rem; text-align: center; border: 1px solid #334155; margin-bottom: 20px; }
         
-        .container { display: none; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; overflow-y: auto; }
-        h1 { animation: fall 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
-        @keyframes fall { 0% { transform: translateY(-150px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        .main-content { display: none; padding: 20px; }
+        .defcon-box { border: 1px solid #ef4444; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 20px; color: #ef4444; font-weight: 900; }
         
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
-        .tab-button { padding: 10px 18px; cursor: pointer; background: rgba(255,255,255,0.1); border: 1px solid white; color: white; border-radius: 20px; font-size: 0.9rem; }
-        .tab-button.active { background: white; color: black; box-shadow: 0 0 15px white; }
+        .tabs { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn { background: #1e293b; border: 1px solid #334155; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .tab-btn.active { border-color: #38bdf8; color: #38bdf8; }
+
+        .tab-content { display: none; max-width: 1200px; margin: 0 auto; background: #1e293b; padding: 30px; border-radius: 20px; border: 1px solid #334155; }
+        .tab-content.active { display: block; }
+
+        .search-bar { width: 100%; padding: 15px; border-radius: 30px; background: #0f172a; border: 1px solid #38bdf8; color: white; margin-bottom: 20px; box-sizing: border-box; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .card { background: #0f172a; padding: 15px; border-radius: 10px; border-left: 4px solid #38bdf8; font-size: 0.9rem; }
         
-        .content { display: none; width: 100%; max-width: 800px; background: rgba(0,0,0,0.8); padding: 25px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
-        .content.active { display: block; }
-        
-        .search-container { display: flex; gap: 10px; margin: 15px 0; }
-        .search-input { flex-grow: 1; padding: 12px; border-radius: 5px; border: none; }
-        .gdp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; max-height: 400px; overflow-y: auto; }
-        .gdp-card { background: rgba(255,255,255,0.05); padding: 8px; border-radius: 5px; border-left: 3px solid #00ff88; font-size: 12px; }
-        .finance-plus { color: #00ff88; font-weight: bold; }
+        #panic-btn { position: fixed; bottom: 20px; right: 20px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 60px; height: 60px; cursor: pointer; font-weight: 900; }
+        .finance-plus { color: #22c55e; font-weight: bold; }
+        li { margin-bottom: 10px; line-height: 1.4; border-bottom: 1px solid #334155; padding-bottom: 5px; list-style: none; }
     </style>
 </head>
-<body>
-    <!-- PIN ACCESS -->
-    <div id="pin-overlay">
-        <h2>Enter Sovereign PIN</h2>
-        <input type="password" id="pin" class="pin-input" maxlength="4" placeholder="****">
-        <button onclick="checkPin()" style="padding:10px 20px; cursor:pointer;">Unlock System</button>
+<body onmousemove="resetTimer()">
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2 style="color:#38bdf8">SOVEREIGN UPLINK</h2>
+            <input type="password" id="pin-input" maxlength="4" placeholder="••••"><br>
+            <button onclick="checkPin()" style="background:#38bdf8; padding:10px 30px; border-radius:8px; border:none; font-weight:900; cursor:pointer;">INITIALIZE</button>
+        </div>
     </div>
 
-    <!-- MAIN INTERFACE -->
-    <div class="container" id="main-ui">
-        <h1>joelewis1533-rgb</h1>
+    <div class="main-content" id="app">
+        <div class="defcon-box">GLOBAL THREAT LEVEL: DEFCON 2 | ENCRYPTED FEED FEB 25, 2026</div>
+        
         <div class="tabs">
-            <div class="tab-button active" onclick="openTab('main')">Search</div>
-            <div class="tab-button" onclick="openTab('sports')">Sports (15)</div>
-            <div class="tab-button" onclick="openTab('finance')">Finance (+)</div>
-            <div class="tab-button" onclick="openTab('gdp')">Top 100 GDP</div>
+            <button class="tab-btn active" onclick="showTab('news')">GLOBAL NEWS</button>
+            <button class="tab-btn" onclick="showTab('sports')">SPORTS (15)</button>
+            <button class="tab-btn" onclick="showTab('finance')">FINANCE (+)</button>
+            <button class="tab-btn" onclick="showTab('gdp')">TOP 100 GDP</button>
         </div>
 
-        <div id="main" class="content active">
-            <form action="https://www.google.com" method="GET" class="search-container" target="_blank">
-                <input type="text" name="q" class="search-input" placeholder="Secure Google Search..." required>
-                <button type="submit" style="padding:12px; background:#4285F4; color:white; border:none; cursor:pointer;">Search</button>
+        <div id="news" class="tab-content active">
+            <form action="https://www.google.com" method="GET" target="_blank">
+                <input type="text" name="q" class="search-bar" placeholder="Tactical Search Engine...">
             </form>
+            <div class="grid">
+                <div class="card"><strong>USA:</strong> President Trump shifts NATO funds to missile defense. U.S. blocks UN anniversary resolutions.</div>
+                <div class="card"><strong>RUSSIA:</strong> Putin activates 'Arctic Sovereignty Zone.' Gas exports redirected to Eastern hubs.</div>
+                <div class="card"><strong>CHINA:</strong> PLA carrier task force deployed to South China Sea. Western hardware ban in gov hubs.</div>
+            </div>
         </div>
 
-        <div id="sports" class="content">
-            <h2>Sports: Feb 25, 2026</h2>
-            <ul style="list-style:none; padding:0;">
-                <li>1. 21M Watch USA-Canada Hockey Gold Peak</li><li>2. NFL Combine: Top Prospects in Indy</li>
-                <li>3. Bears Allow Edmunds Trade Seek</li><li>4. USF Volleyball Coach Extension</li>
-                <li>5. Mariners' Raleigh on 60-Homer Chase</li><li>6. Danica Patrick Trolls Canada</li>
-                <li>7. Wisconsin Hosts Big Ten Swim Champs</li><li>8. NFL Referees Flag Power Proposal</li>
-                <li>9. Falcons Release QB Cousins</li><li>10. Sidney Crosby on IR (4w)</li>
-                <li>11. Cubs' Tyler Austin Knee Surgery</li><li>12. Rays Ballpark Land Approved</li>
-                <li>13. Chris Sale $27M Braves Extension</li><li>14. Arvell Reese Projected to NYJ</li>
-                <li>15. NC State Lands QB Gunner Rivers</li>
-            </ul>
-        </div>
-
-        <div id="finance" class="content">
-            <h2>Market Gravity</h2>
+        <div id="sports" class="tab-content">
+            <h3>Top 15 Headlines</h3>
             <ul>
-                <li><span class="finance-plus">(+) US Stocks Rally: Nvidia Gains Ahead of Earnings</span></li>
-                <li>Dow Jones Jumps 300+ Points on Labor Data</li>
-                <li>Nvidia 'Vera Rubin' AI Set for 2026 Launch</li>
-                <li>Thrive Capital $1B OpenAI Injection</li>
-                <li>Samsung S26 AI Smartphone Launch</li>
+                <li>1. 21M Watch USA-Canada Hockey Gold Peak</li><li>2. NFL Combine: Top Prospects Gather in Indy</li><li>3. Bears Allow LB Edmunds Trade Seek</li><li>4. USF Volleyball Coach Extension</li><li>5. Mariners' Raleigh Dismisses 60-HR Goal</li><li>6. Danica Patrick Trolls Canada Post-Loss</li><li>7. Wisconsin Hosts Big Ten Swim Champs</li><li>8. NFL Referees Flag Power Proposal</li><li>9. Falcons Release QB Cousins Mar 11</li><li>10. Sidney Crosby on IR (4-Week Recovery)</li><li>11. Cubs' Tyler Austin Knee Surgery</li><li>12. Rays Ballpark Land Approved by Cabinet</li><li>13. Chris Sale $27M Braves Extension</li><li>14. Arvell Reese Projected to NY Jets</li><li>15. NC State Lands QB Gunner Rivers</li>
             </ul>
         </div>
 
-        <div id="gdp" class="content">
-            <h2>Global GDP Ranking (Top 100)</h2>
-            <div class="gdp-grid" id="gdp-list"></div>
+        <div id="finance" class="tab-content">
+            <h3><span class="finance-plus">(+)</span> US Market Sentiment: Positive</h3>
+            <ul>
+                <li>(+) US Stocks Rally: Nvidia Gains Ahead of Earnings</li><li>Dow Jones Jumps 300+ Points on Labor Data</li><li>Nvidia 'Vera Rubin' AI Set for 2026 Launch</li><li>Thrive Capital $1B OpenAI Injection</li><li>Samsung S26 AI Smartphone Launch</li>
+            </ul>
+        </div>
+
+        <div id="gdp" class="tab-content">
+            <div class="grid" id="gdp-list"></div>
         </div>
     </div>
+
+    <button id="panic-btn" onclick="location.reload()">LOCK</button>
 
     <script>
-        const SOVEREIGN_PIN = "1533"; // Set your PIN here
-
-        function checkPin() {
-            if(document.getElementById('pin').value === SOVEREIGN_PIN) {
-                document.getElementById('pin-overlay').style.display = 'none';
-                document.getElementById('main-ui').style.display = 'flex';
-                document.body.style.overflow = 'auto';
-            } else { alert("Access Denied"); }
+        let idle;
+        function resetTimer() { clearTimeout(idle); idle = setTimeout(() => location.reload(), 300000); }
+        function checkPin() { if(document.getElementById('pin-input').value === "1533") { document.getElementById('login-overlay').style.display='none'; document.getElementById('app').style.display='block'; loadGDP(); } }
+        function showTab(id) { 
+            document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
         }
-
-        // GDP Data Generator
-        const nations = ["USA", "China", "Germany", "India", "Japan", "UK", "France", "Brazil", "Italy", "Canada", "Russia", "Mexico", "Australia", "Korea", "Spain", "Indonesia", "Turkey", "Netherlands", "Saudi Arabia", "Switzerland"];
-        const gdpList = document.getElementById('gdp-list');
-        for(let i=1; i<=100; i++) {
-            let name = nations[i-1] || "Nation " + i;
-            gdpList.innerHTML += `<div class="gdp-card">#${i} ${name}</div>`;
-        }
-
-        // Newton's Prism & Mouse Interaction
-        let h = 0;
-        function prism() { h = (h + 1) % 360; document.body.style.backgroundColor = `hsl(${h}, 35%, 15%)`; requestAnimationFrame(prism); }
-        prism();
-
-        document.addEventListener('mousemove', e => {
-            document.body.style.setProperty('--mouse-x', e.clientX + 'px');
-            document.body.style.setProperty('--mouse-y', e.clientY + 'px');
-        });
-
-        function openTab(name) {
-            document.querySelectorAll('.content, .tab-button').forEach(el => el.classList.remove('active'));
-            document.getElementById(name).classList.add('active');
-            event.currentTarget.classList.add('active');
+        function loadGDP() {
+            const list = document.getElementById('gdp-list');
+            const n = ["USA", "China", "Germany", "India", "Japan", "UK", "France", "Italy", "Brazil", "Canada", "Russia", "Mexico", "Australia", "Korea", "Spain"];
+            for(let i=1; i<=100; i++) list.innerHTML += `<div class="card">#${i} ${n[i-1] || 'Tactical Ally '+i}</div>`;
         }
     </script>
 </body>
