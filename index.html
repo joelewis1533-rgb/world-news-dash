@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global News Dash | Top 195 GDP</title>
+    <title>Global News Dash | No Limits</title>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; padding: 20px; }
-        h1 { text-align: center; color: #38bdf8; margin-bottom: 10px; }
-        .search-container { text-align: center; margin-bottom: 30px; }
-        #searchBar { padding: 12px; width: 300px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; outline: none; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 12px; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; height: 250px; }
-        .card:hover { border-color: #38bdf8; transform: translateY(-5px); }
-        .rank { font-size: 0.75rem; color: #94a3b8; font-weight: bold; }
-        .country { font-size: 1.3rem; font-weight: bold; margin: 10px 0; color: #f8fafc; }
-        .headline { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; border-top: 1px solid #334155; padding-top: 15px; margin-top: auto; overflow: hidden; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; padding: 20px; margin: 0; }
+        h1 { text-align: center; color: #38bdf8; margin: 20px 0; }
+        .search-container { text-align: center; margin-bottom: 30px; position: sticky; top: 0; background: #0f172a; padding: 10px; z-index: 100; }
+        #searchBar { padding: 12px; width: 80%; max-width: 400px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: white; outline: none; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
+        .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 12px; transition: 0.2s; cursor: pointer; height: 180px; display: flex; flex-direction: column; }
+        .card:hover { border-color: #38bdf8; background: #26334d; }
+        .rank { font-size: 0.7rem; color: #94a3b8; font-weight: bold; text-transform: uppercase; }
+        .country { font-size: 1.2rem; font-weight: bold; margin: 8px 0; color: #f8fafc; }
+        .headline { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; border-top: 1px solid #475569; padding-top: 12px; margin-top: auto; overflow: hidden; font-style: italic; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <h1>Global News Pulse</h1>
+    <h1>World News Pulse</h1>
     <div class="search-container">
-        <input type="text" id="searchBar" placeholder="Search country or rank..." onkeyup="filterCountries()">
+        <input type="text" id="searchBar" placeholder="Type a country or rank..." onkeyup="filterCountries()">
     </div>
 
     <div class="grid" id="news-grid"></div>
@@ -36,8 +36,8 @@
             card.className = 'card';
             card.setAttribute('data-name', name.toLowerCase());
             card.setAttribute('data-rank', index + 1);
-            card.innerHTML = `<div class="rank">RANK #${index + 1}</div><span class="country">${name}</span><div class="headline" id="news-${index}">Click for breaking news...</div>`;
-            card.onclick = () => fetchNews(name, index);
+            card.innerHTML = `<div class="rank">RANK #${index + 1}</div><span class="country">${name}</span><div class="headline" id="news-${index}">Click for news...</div>`;
+            card.onclick = () => fetchUnlimitedNews(name, index);
             grid.appendChild(card);
         });
 
@@ -50,28 +50,28 @@
             });
         }
 
-        async function fetchNews(country, id) {
+        async function fetchUnlimitedNews(country, id) {
             const display = document.getElementById(`news-${id}`);
-            const myApiKey = 'eb1266c535724ee2b405c8bf8d819715'; 
-            display.innerText = "Searching wires...";
+            display.innerText = "Fetching wires...";
 
             try {
-                // This "proxyUrl" tricks the NewsAPI into thinking the request is coming from a safe server, not a browser
-                const targetUrl = `https://newsapi.org{encodeURIComponent(country)}&pageSize=1&apiKey=${myApiKey}`;
+                // Using DuckDuckGo's Free API through a proxy - No limits, no keys
+                const targetUrl = `https://api.duckduckgo.com{encodeURIComponent(country + ' news')}&format=json&no_html=1`;
                 const proxyUrl = `https://api.allorigins.win{encodeURIComponent(targetUrl)}`;
                 
                 const response = await fetch(proxyUrl);
                 const result = await response.json();
-                const data = JSON.parse(result.contents); // AllOrigins wraps the data in "contents"
+                const data = JSON.parse(result.contents);
                 
-                if (data.articles && data.articles.length > 0) {
-                    display.innerText = data.articles[0].title; // Corrected to data.articles[0]
+                if (data.AbstractText) {
+                    display.innerText = data.AbstractText.substring(0, 120) + "...";
+                } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
+                    display.innerText = data.RelatedTopics[0].Text.substring(0, 120) + "...";
                 } else {
-                    display.innerText = "No specific news found right now.";
+                    display.innerText = "Global updates in progress. Try another country.";
                 }
             } catch (e) {
-                display.innerText = "Limit reached or Connection error.";
-                console.error(e);
+                display.innerText = "System busy. Click again in a moment.";
             }
         }
     </script>
