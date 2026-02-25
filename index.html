@@ -14,7 +14,7 @@
         .card:hover { border-color: #38bdf8; background: #1e294b; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
         .rank { font-size: 0.7rem; color: #38bdf8; font-weight: 800; }
         .country { font-size: 1.3rem; font-weight: 700; margin: 5px 0; border-bottom: 1px solid #334155; padding-bottom: 5px; color: #f8fafc; }
-        .headline { font-size: 0.9rem; color: #94a3b8; line-height: 1.5; font-style: italic; margin-top: 10px; }
+        .headline { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; font-style: italic; margin-top: 10px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
         .hidden { display: none; }
     </style>
 </head>
@@ -50,7 +50,7 @@
             box.innerText = "Tunneling Satellites...";
 
             try {
-                // METHOD 1: Google News RSS via JSON Bridge (Firewall Invisible)
+                // FIXED: Google News RSS via JSON Bridge (Firewall Invisible)
                 const rssUrl = `https://news.google.com{encodeURIComponent(q)}+news&hl=en-US&gl=US&ceid=US:en`;
                 const proxy = `https://api.rss2json.com{encodeURIComponent(rssUrl)}`;
                 
@@ -58,16 +58,18 @@
                 const data = await res.json();
 
                 if (data.items && data.items.length > 0) {
+                    // Extract just the headline title
                     box.innerHTML = `<b>${data.items[0].title}</b>`;
                 } else {
                     throw new Error("Empty Feed");
                 }
             } catch (e) {
-                // METHOD 2: DuckDuckGo Ghost Scrape (Fallback)
+                // FIXED: DuckDuckGo Ghost Scrape (Fallback)
                 try {
-                    const ddg = await fetch(`https://api.duckduckgo.com{q}+breaking+news&format=json&no_html=1`);
-                    const d = await ddg.json();
-                    box.innerText = d.AbstractText || "Satellite Weak. Try again.";
+                    const ddgUrl = `https://api.duckduckgo.com{encodeURIComponent(q)}+breaking+news&format=json&no_html=1`;
+                    const ddgRes = await fetch(ddgUrl);
+                    const d = await ddgRes.json();
+                    box.innerText = d.AbstractText || "Satellite Weak. Try another station.";
                 } catch (e2) {
                     box.innerText = "Admin Block Too Strong. Use Hotspot.";
                 }
