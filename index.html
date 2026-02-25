@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global News Pulse | Ghost Mode</title>
+    <title>Global Pulse | Total Bypass Edition</title>
     <style>
         body { font-family: 'Inter', sans-serif; background: #020617; color: white; padding: 20px; margin: 0; }
         h1 { text-align: center; color: #38bdf8; margin: 20px 0; text-transform: uppercase; letter-spacing: 2px; }
@@ -41,30 +41,36 @@
                 <div class="country">${name}</div>
                 <div class="headline" id="h-${index}">Tap for Live Feed...</div>
             `;
-            card.onclick = () => fetchNews(name, index);
+            card.onclick = () => tunnelFetch(name, index);
             grid.appendChild(card);
         });
 
-        async function fetchNews(q, id) {
+        async function tunnelFetch(q, id) {
             const box = document.getElementById(`h-${id}`);
-            box.innerText = "Searching DDG Satellites...";
+            box.innerText = "Tunneling Satellites...";
 
             try {
-                // Using DuckDuckGo's internal API - usually bypasses school firewalls
-                const url = `https://api.duckduckgo.com{encodeURIComponent(q + ' current event summary')}&format=json&no_html=1&skip_disambig=1`;
+                // METHOD 1: Google News RSS via JSON Bridge (Firewall Invisible)
+                const rssUrl = `https://news.google.com{encodeURIComponent(q)}+news&hl=en-US&gl=US&ceid=US:en`;
+                const proxy = `https://api.rss2json.com{encodeURIComponent(rssUrl)}`;
                 
-                const res = await fetch(url);
+                const res = await fetch(proxy);
                 const data = await res.json();
 
-                if (data.AbstractText) {
-                    box.innerText = data.AbstractText.substring(0, 120) + "...";
-                } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
-                    box.innerText = data.RelatedTopics[0].Text.substring(0, 120) + "...";
+                if (data.items && data.items.length > 0) {
+                    box.innerHTML = `<b>${data.items[0].title}</b>`;
                 } else {
-                    box.innerText = "No data on this frequency. Try another station.";
+                    throw new Error("Empty Feed");
                 }
             } catch (e) {
-                box.innerText = "Network Admin Blocked. Try Incognito Mode or a Hotspot.";
+                // METHOD 2: DuckDuckGo Ghost Scrape (Fallback)
+                try {
+                    const ddg = await fetch(`https://api.duckduckgo.com{q}+breaking+news&format=json&no_html=1`);
+                    const d = await ddg.json();
+                    box.innerText = d.AbstractText || "Satellite Weak. Try again.";
+                } catch (e2) {
+                    box.innerText = "Admin Block Too Strong. Use Hotspot.";
+                }
             }
         }
 
