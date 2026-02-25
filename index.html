@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Pulse | Total Bypass Edition</title>
+    <title>Global Pulse | Ghost Mode</title>
+    <!-- Puter.js Bypasses CORS and Admin Filters -->
+    <script src="https://js.puter.com"></script>
     <style>
         body { font-family: 'Inter', sans-serif; background: #020617; color: white; padding: 20px; margin: 0; }
-        h1 { text-align: center; color: #38bdf8; margin: 20px 0; text-transform: uppercase; letter-spacing: 2px; }
+        h1 { text-align: center; color: #38bdf8; margin: 20px 0; text-transform: uppercase; }
         .search-container { text-align: center; margin-bottom: 30px; position: sticky; top: 0; background: #020617; padding: 15px; z-index: 100; border-bottom: 1px solid #1e293b; }
-        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 12px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; font-size: 16px; box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
+        #searchBar { padding: 14px; width: 85%; max-width: 500px; border-radius: 12px; border: 1px solid #38bdf8; background: #0f172a; color: white; outline: none; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
-        .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 15px; transition: 0.3s; cursor: pointer; min-height: 180px; display: flex; flex-direction: column; justify-content: space-between; }
-        .card:hover { border-color: #38bdf8; background: #1e294b; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .rank { font-size: 0.7rem; color: #38bdf8; font-weight: 800; }
-        .country { font-size: 1.3rem; font-weight: 700; margin: 5px 0; border-bottom: 1px solid #334155; padding-bottom: 5px; color: #f8fafc; }
-        .headline { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; font-style: italic; margin-top: 10px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+        .card { background: #1e293b; border: 1px solid #334155; padding: 20px; border-radius: 15px; cursor: pointer; transition: 0.3s; min-height: 180px; display: flex; flex-direction: column; }
+        .card:hover { border-color: #38bdf8; background: #1e294b; transform: translateY(-5px); }
+        .country { font-size: 1.3rem; font-weight: 700; margin: 5px 0; border-bottom: 1px solid #334155; padding-bottom: 5px; }
+        .headline { font-size: 0.9rem; color: #94a3b8; line-height: 1.5; margin-top: auto; font-style: italic; }
         .hidden { display: none; }
     </style>
 </head>
@@ -22,10 +23,10 @@
 
     <h1>World News Pulse</h1>
     <div class="search-container">
-        <input type="text" id="searchBar" placeholder="Search 180+ stations..." onkeyup="filter()">
+        <input type="text" id="searchBar" placeholder="Tunneling past filters..." onkeyup="filter()">
     </div>
 
-    <div class="grid" id="news-grid"></div>
+    <div id="news-grid" class="grid"></div>
 
     <script>
         const countries = ["USA", "China", "Germany", "India", "Japan", "UK", "France", "Italy", "Russia", "Canada", "Brazil", "Spain", "Mexico", "Australia", "South Korea", "Turkey", "Indonesia", "Netherlands", "Saudi Arabia", "Poland", "Switzerland", "Taiwan", "Belgium", "Ireland", "Sweden", "Argentina", "Israel", "Singapore", "Austria", "UAE", "Thailand", "Norway", "Philippines", "Bangladesh", "Vietnam", "Malaysia", "Denmark", "Colombia", "Hong Kong", "Romania", "South Africa", "Czech Republic", "Pakistan", "Egypt", "Iran", "Portugal", "Chile", "Finland", "Nigeria", "Peru", "Kazakhstan", "Greece", "Algeria", "New Zealand", "Iraq", "Hungary", "Qatar", "Ukraine", "Cuba", "Morocco", "Slovakia", "Kuwait", "Uzbekistan", "Bulgaria", "Kenya", "Dominican Republic", "Ecuador", "Guatemala", "Puerto Rico", "Ethiopia", "Ghana", "Croatia", "Serbia", "Côte d'Ivoire", "Angola", "Costa Rica", "Oman", "Luxembourg", "Lithuania", "Sri Lanka", "Panama", "Tanzania", "Azerbaijan", "Turkmenistan", "Belarus", "Uruguay", "DR Congo", "Jordan", "Tunisia", "Myanmar", "Cameroon", "Uganda", "Libya", "Bolivia", "Latvia", "Bahrain", "Paraguay", "Estonia", "Nepal", "Macao", "El Salvador", "Honduras", "Senegal", "Papua New Guinea", "Cyprus", "Cambodia", "Zambia", "Iceland", "Zimbabwe", "Trinidad and Tobago", "Bosnia and Herzegovina", "Georgia", "Sudan", "Gabon", "Albania", "Guyana", "Botswana", "Laos", "Burkina Faso", "Mali", "Armenia", "Mauritius", "Benin", "Malta", "Bahamas", "North Macedonia", "South Sudan", "Mongolia", "Guinea", "Madagascar", "Brunei", "Moldova", "Niger", "Chad", "Rwanda", "Malawi", "Mauritania", "Haiti", "Tajikistan", "Kyrgyzstan", "Kosovo", "Nicaragua", "Somalia", "Montenegro", "Togo", "Fiji", "Barbados", "Suriname", "Maldives", "Eswatini", "Sierra Leone", "Liberia", "Burundi", "Andorra", "Djibouti", "Bhutan", "Gambia", "Central African Republic", "Lesotho", "Belize", "Timor-Leste", "Saint Lucia", "Cabo Verde", "Seychelles", "Antigua and Barbuda", "San Marino", "Guinea-Bissau", "Solomon Islands", "Grenada", "Comoros", "Saint Kitts and Nevis", "Vanuatu", "Samoa", "Saint Vincent and the Grenadines", "Dominica", "Sao Tome and Principe", "Tonga", "Micronesia", "Marshall Islands", "Palau", "Kiribati", "Nauru", "Tuvalu", "Holy See"];
@@ -35,53 +36,36 @@
             const card = document.createElement('div');
             card.className = 'card';
             card.setAttribute('data-name', name.toLowerCase());
-            card.setAttribute('data-rank', (index + 1).toString());
-            card.innerHTML = `
-                <div class="rank">STATION #${index + 1}</div>
-                <div class="country">${name}</div>
-                <div class="headline" id="h-${index}">Tap for Live Feed...</div>
-            `;
-            card.onclick = () => tunnelFetch(name, index);
+            card.innerHTML = `<div class="rank">STATION #${index + 1}</div><div class="country">${name}</div><div class="headline" id="h-${index}">Tap to Sync...</div>`;
+            card.onclick = () => fetchNews(name, index);
             grid.appendChild(card);
         });
 
-        async function tunnelFetch(q, id) {
+        async function fetchNews(q, id) {
             const box = document.getElementById(`h-${id}`);
-            box.innerText = "Tunneling Satellites...";
+            box.innerText = "Ghost Tunneling...";
 
             try {
-                // FIXED: Google News RSS via JSON Bridge (Firewall Invisible)
+                // Puter.js makes the request from THEIR server, bypassing YOUR firewall
                 const rssUrl = `https://news.google.com{encodeURIComponent(q)}+news&hl=en-US&gl=US&ceid=US:en`;
-                const proxy = `https://api.rss2json.com{encodeURIComponent(rssUrl)}`;
-                
-                const res = await fetch(proxy);
-                const data = await res.json();
+                const response = await puter.fetch(`https://api.rss2json.com{encodeURIComponent(rssUrl)}`);
+                const data = await response.json();
 
                 if (data.items && data.items.length > 0) {
-                    // Extract just the headline title
+                    // Pull the most recent headline
                     box.innerHTML = `<b>${data.items[0].title}</b>`;
                 } else {
-                    throw new Error("Empty Feed");
+                    box.innerText = "No data on this frequency.";
                 }
             } catch (e) {
-                // FIXED: DuckDuckGo Ghost Scrape (Fallback)
-                try {
-                    const ddgUrl = `https://api.duckduckgo.com{encodeURIComponent(q)}+breaking+news&format=json&no_html=1`;
-                    const ddgRes = await fetch(ddgUrl);
-                    const d = await ddgRes.json();
-                    box.innerText = d.AbstractText || "Satellite Weak. Try another station.";
-                } catch (e2) {
-                    box.innerText = "Admin Block Too Strong. Use Hotspot.";
-                }
+                box.innerText = "Admin Block Deep. Use a Mobile Hotspot.";
             }
         }
 
         function filter() {
             const val = document.getElementById('searchBar').value.toLowerCase();
             document.querySelectorAll('.card').forEach(c => {
-                const n = c.getAttribute('data-name');
-                const r = c.getAttribute('data-rank');
-                c.classList.toggle('hidden', !n.includes(val) && !r.includes(val));
+                c.classList.toggle('hidden', !c.getAttribute('data-name').includes(val));
             });
         }
     </script>
