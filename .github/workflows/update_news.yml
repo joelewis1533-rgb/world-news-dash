@@ -1,4 +1,4 @@
-name: Auto Update News Data
+name: News Update
 on:
   workflow_dispatch:
   schedule:
@@ -8,22 +8,24 @@ permissions:
   contents: write
 
 jobs:
-  update:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
-      - name: Install requests
+          python-version: '3.10'
+      - name: Install dependencies
         run: pip install requests
-      - name: Run Script
+      - name: Fetch News
         env:
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
         run: python scripts/fetch_news.py
-      - name: Auto Commit News Data
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Automated news update"
-          file_pattern: "*.json"
+      - name: Commit files
+        run: |
+          git config --local user.name 'github-actions[bot]'
+          git config --local user.email 'github-actions[bot]@users.noreply.github.com'
+          git add news-data.json sports-data.json
+          git commit -m "update news" || echo "no changes"
+          git push
