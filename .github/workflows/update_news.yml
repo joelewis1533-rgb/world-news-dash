@@ -1,8 +1,38 @@
-- name: Commit and Push changes
+name: Auto Update News Data
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Run Script
+        env:
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+        run: python scripts/fetch_news.py
+
+      - name: Commit and Push
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          # This command check if files exist before adding them
-          git add news-data.json sports-data.json || echo "Files not found"
+          git add news-data.json sports-data.json
           git commit -m "Automated news update" || echo "No changes to commit"
-          git push origin main
+          git push
