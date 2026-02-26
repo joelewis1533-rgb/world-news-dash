@@ -3,73 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World News Dash & NBA Tracker</title>
+    <title>World News Dash | USA Sports</title>
     <style>
         :root { --primary: #1a73e8; --dark: #202124; --light: #f8f9fa; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--light); }
-        header { background: var(--dark); color: white; padding: 1rem; text-align: center; }
-        .tabs { display: flex; justify-content: center; background: #fff; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 100; }
-        .tab-btn { padding: 15px 25px; border: none; background: none; cursor: pointer; font-size: 1rem; font-weight: bold; color: #5f6368; }
-        .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
-        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
-        .card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); }
-        .card img { width: 100%; height: 200px; object-fit: cover; background: #eee; }
-        .card-content { padding: 15px; flex-grow: 1; }
-        .card-content h3 { margin: 0 0 10px; font-size: 1.1rem; color: var(--dark); }
-        .card-content p { font-size: 0.9rem; color: #5f6368; line-height: 1.4; }
-        .card-footer { padding: 15px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .read-more { color: var(--primary); text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--light); color: var(--dark); }
+        header { background: var(--dark); color: white; padding: 1.5rem; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        
+        /* Navigation Tabs */
+        nav { display: flex; justify-content: center; background: white; border-bottom: 1px solid #ddd; sticky; top: 0; z-index: 1000; }
+        .tab-btn { padding: 1rem 2rem; border: none; background: none; cursor: pointer; font-weight: bold; color: #5f6368; transition: 0.3s; }
+        .tab-btn.active { color: var(--primary); border-bottom: 4px solid var(--primary); }
+
+        /* News Grid & Cards */
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 30px; max-width: 1300px; margin: auto; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: 0.3s; display: flex; flex-direction: column; height: 100%; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .card img { width: 100%; height: 200px; object-fit: cover; background: #f0f0f0; }
+        .card-body { padding: 20px; flex-grow: 1; }
+        .card-body h3 { margin: 0 0 12px; font-size: 1.25rem; line-height: 1.3; color: #111; }
+        .card-body p { font-size: 0.95rem; color: #666; line-height: 1.5; margin-bottom: 15px; }
+        .card-footer { padding: 15px 20px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .date { font-size: 0.85rem; color: #999; }
+        .btn-link { color: var(--primary); text-decoration: none; font-weight: bold; font-size: 0.9rem; border: 1px solid var(--primary); padding: 5px 12px; border-radius: 5px; }
+        .btn-link:hover { background: var(--primary); color: white; }
     </style>
 </head>
 <body>
-    <header><h1>World News Dash</h1></header>
-    <nav class="tabs">
-        <button class="tab-btn active" onclick="switchTab(this, 'news-data.json')">World News</button>
-        <button class="tab-btn" onclick="switchTab(this, 'sports-data.json')">USA Sports (NBA)</button>
-    </nav>
-    <div id="news-container" class="news-grid">
-        <p style="text-align:center; grid-column: 1/-1;">Loading latest updates...</p>
-    </div>
 
-    <script>
-        const container = document.getElementById('news-container');
-        async function loadNews(fileName) {
-            container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Fetching data...</p>';
-            try {
-                const response = await fetch(`./${fileName}`);
-                const data = await response.json();
-                renderCards(data.articles);
-            } catch (error) {
-                container.innerHTML = `<p style="text-align:center; grid-column: 1/-1;">No data found. Click "Run workflow" in GitHub Actions.</p>`;
-            }
+<header>
+    <h1>World News Dash</h1>
+</header>
+
+<nav>
+    <button id="world-btn" class="tab-btn active" onclick="switchTab('news-data.json', 'world-btn')">World News</button>
+    <button id="sports-btn" class="tab-btn" onclick="switchTab('sports-data.json', 'sports-btn')">USA Sports (NBA)</button>
+</nav>
+
+<div id="news-container" class="news-grid">
+    <!-- Automated News Cards Will Appear Here -->
+    <p style="text-align: center; grid-column: 1/-1;">Initializing news feed...</p>
+</div>
+
+<script>
+    const container = document.getElementById('news-container');
+
+    async function loadNews(file) {
+        container.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">Fetching latest headlines...</p>';
+        try {
+            // This looks for the files created by your GitHub automation
+            const response = await fetch(`./${file}`);
+            if (!response.ok) throw new Error('Data not ready');
+            const data = await response.json();
+            displayArticles(data.articles);
+        } catch (err) {
+            container.innerHTML = `<div style="text-align: center; grid-column: 1/-1;">
+                <h3>Wait! Your data isn't ready.</h3>
+                <p>Go to your GitHub <b>Actions</b> tab and click <b>Run workflow</b> to generate the news files.</p>
+            </div>`;
         }
-        function renderCards(articles) {
-            container.innerHTML = ''; 
-            articles.forEach(article => {
-                if (!article.title || article.title === "[Removed]") return;
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="${article.urlToImage || 'https://via.placeholder.com'}" alt="Thumb">
-                    <div class="card-content">
-                        <h3>${article.title}</h3>
-                        <p>${article.description || 'Full story available via Read More.'}</p>
-                    </div>
-                    <div class="card-footer">
-                        <span style="font-size: 0.8rem; color: #999;">${new Date(article.publishedAt).toLocaleDateString()}</span>
-                        <a href="${article.url}" target="_blank" class="read-more">Read More</a>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+    }
+
+    function displayArticles(articles) {
+        container.innerHTML = '';
+        if (!articles || articles.length === 0) {
+            container.innerHTML = '<p>No news available right now.</p>';
+            return;
         }
-        function switchTab(element, file) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            loadNews(file);
-        }
-        loadNews('news-data.json');
-    </script>
+
+        articles.forEach(article => {
+            if (!article.title || article.title === "[Removed]") return;
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <img src="${article.urlToImage || 'https://via.placeholder.com'}" alt="Thumbnail">
+                <div class="card-body">
+                    <h3>${article.title}</h3>
+                    <p>${article.description || 'No description provided. Click below to read the full article.'}</p>
+                </div>
+                <div class="card-footer">
+                    <span class="date">${new Date(article.publishedAt).toLocaleDateString()}</span>
+                    <a href="${article.url}" target="_blank" class="btn-link">Read More</a>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function switchTab(file, btnId) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(btnId).classList.add('active');
+        loadNews(file);
+    }
+
+    // Default load
+    loadNews('news-data.json');
+</script>
+
 </body>
 </html>
